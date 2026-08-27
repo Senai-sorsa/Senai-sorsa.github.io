@@ -144,9 +144,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
       </div>
       <div class="reveal d2 flex justify-center md:justify-end">
         <div class="relative w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
-          <!-- TODO: replace this monogram with your headshot -->
-          <div class="pf w-full h-full rounded-3xl flex items-center justify-center bg-gradient-to-br from-accent to-accent-light">
-            <span class="font-display font-bold text-8xl text-white" aria-hidden="true">SS</span>
+          <div class="pf w-full h-full rounded-3xl">
+            <img src="senai-headshot.png" alt="Senai Sorsa" loading="eager">
           </div>
           <div class="absolute -bottom-4 -left-4 bg-accent text-white font-display font-bold text-sm px-4 py-2.5 rounded-2xl shadow-lg">NASA SEES Alum</div>
         </div>
@@ -195,14 +194,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
     </div>
     <div class="grid md:grid-cols-2 gap-6">
       <article class="card-h reveal d1 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent md:row-span-2">
-        <!-- TODO: swap for a real photo of the prototype -->
-        <div class="pf w-full h-64 md:h-80 flex items-center justify-center bg-gradient-to-br from-zinc-900 to-black">
-          <svg class="w-16 h-16 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="1.6" fill="currentColor"/>
-            <line x1="12" y1="12" x2="12" y2="3" stroke-linecap="round"/>
-            <line x1="12" y1="12" x2="19.5" y2="16.5" stroke-linecap="round"/>
-            <line x1="12" y1="12" x2="4.5" y2="16.5" stroke-linecap="round"/>
-          </svg>
+        <div class="pf w-full h-64 md:h-80">
+          <img src="wind-turbine.jpg" alt="Frictionless Wind Turbine Project" loading="lazy">
         </div>
         <div class="p-7">
           <div class="flex flex-wrap gap-2 mb-4">
@@ -211,12 +204,13 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
             <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Science Fair</span>
           </div>
           <h3 class="font-display font-bold text-2xl text-black dark:text-white mb-2">Frictionless Wind Turbine Project</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Devised and modeled a magnetic-levitation wind turbine using active magnetic bearings and magnetic gears to eliminate mechanical friction losses. Assembled a working prototype from the ground up and presented the research at the Dallas Regional Science Fair, advancing as a Top 48 finalist out of roughly 1,100 competitors.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Devised and modeled a magnetic-levitation wind turbine using active magnetic bearings and magnetic gears to eliminate mechanical friction losses. Assembled a working prototype from the ground up and presented the research at the Dallas Regional Science Fair, advancing as a Top 48 finalist out of roughly 1,100 competitors.</p>
+          <a href="wind-turbine.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
         </div>
       </article>
       <article class="card-h reveal d2 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="pf w-full h-48 flex items-center justify-center bg-gradient-to-br from-zinc-900 to-black">
-          <span class="font-display font-bold text-5xl text-accent" aria-hidden="true">&Sigma;</span>
+        <div class="pf w-full h-48">
+          <img src="maglev-train.jpg" alt="Maglev Train Mathematical Modeling" loading="lazy">
         </div>
         <div class="p-6">
           <div class="flex flex-wrap gap-2 mb-3">
@@ -224,16 +218,13 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
             <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Applied Math</span>
           </div>
           <h3 class="font-display font-bold text-xl text-black dark:text-white mb-1.5">Maglev Train Mathematical Modeling</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Modeled electrodynamic suspension (EDS) maglev levitation using differential equations, Fourier series, and the Lorentz and London equations. Applied Euler and RK4 numerical methods in Python to derive real-world acceleration and load-safety parameters.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Modeled electrodynamic suspension (EDS) maglev levitation using differential equations, Fourier series, and the Lorentz and London equations. Applied Euler and RK4 numerical methods in Python to derive real-world acceleration and load-safety parameters.</p>
+          <a href="maglev-modeling.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project →</a>
         </div>
       </article>
       <article class="card-h reveal d3 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="pf w-full h-48 flex items-center justify-center bg-gradient-to-br from-zinc-900 to-black">
-          <svg class="w-14 h-14 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"/>
-            <line x1="12" y1="8" x2="12" y2="16" stroke-linecap="round"/>
-            <line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"/>
-          </svg>
+        <div class="pf w-full h-48">
+          <img src="dermascan.jpg" alt="Skin Cancer Diagnostic AI Model — Dermascan app" loading="lazy">
         </div>
         <div class="p-6">
           <div class="flex flex-wrap gap-2 mb-3">
@@ -241,7 +232,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
             <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Healthcare</span>
           </div>
           <h3 class="font-display font-bold text-xl text-black dark:text-white mb-1.5">Skin Cancer Diagnostic AI Model</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Engineered an AI diagnostic model reaching 98.8% accuracy in skin cancer detection and integrated it into a mobile app prototype. Qualified for the Texas State Science &amp; Engineering Fair.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Engineered an AI diagnostic model reaching 98.8% accuracy in skin cancer detection and integrated it into a mobile app prototype (Dermascan). Qualified for the Texas State Science &amp; Engineering Fair.</p>
+          <a href="dermascan.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project →</a>
         </div>
       </article>
     </div>
@@ -252,9 +244,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   <div class="max-w-6xl mx-auto px-6">
     <div class="grid md:grid-cols-2 gap-16 items-center">
       <div class="reveal order-2 md:order-1">
-        <!-- TODO: replace this monogram with your headshot -->
-        <div class="pf w-full aspect-square max-w-sm mx-auto rounded-3xl flex items-center justify-center bg-gradient-to-br from-accent to-accent-light">
-          <span class="font-display font-bold text-7xl text-white" aria-hidden="true">SS</span>
+        <div class="pf w-full aspect-square max-w-sm mx-auto rounded-3xl">
+          <img src="senai-headshot.png" alt="Senai Sorsa" loading="lazy">
         </div>
       </div>
       <div class="order-1 md:order-2">
