@@ -1,740 +1,536 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="app()" :class="{'dark':dark}" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modeling the Meissner Effect — EDS Maglev Differential Equations</title>
-<meta name="description" content="Deriving and numerically solving the coupled ODEs governing EDS maglev levitation and propulsion, from the Lorentz force law and London equations to Euler/RK4 comparison.">
-
+<meta name="description" content="Modeling EDS maglev levitation with differential equations — Lorentz force law, London equations, Fourier/Halbach fields, and Euler vs RK4 numerical methods. Extended Essay by Senai Sorsa.">
+<meta name="keywords" content="maglev, Meissner effect, differential equations, Lorentz force, London equations, Halbach array, aerospace engineering">
+<meta name="author" content="Senai Sorsa">
+<meta property="og:title" content="Modeling the Meissner Effect — Senai Sorsa">
+<meta property="og:description" content="Deriving and numerically solving the coupled ODEs governing EDS maglev levitation and propulsion.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://senai-sorsa.github.io/maglev-modeling.html">
+<title>Modeling the Meissner Effect — Senai Sorsa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
 
-<style>
-  :root{
-    --paper: #F1F4F8;
-    --paper-raised: #FFFFFF;
-    --ink: #14181F;
-    --ink-soft: #4A5568;
-    --ink-faint: #8492A6;
-    --pole-n: #1F4FD8;
-    --pole-n-tint: #E7EDFC;
-    --pole-s: #C4571F;
-    --pole-s-tint: #FBEBE1;
-    --rule: #D3DBE6;
-    --panel-dark: #10141C;
-    --panel-dark-ink: #C9D3E0;
-    --content-w: 700px;
-    --nav-w: 250px;
-  }
-
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
-  }
-
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Source Serif 4', Georgia, serif;
-    font-size:18px;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
-
-  h1,h2,h3,.mono{
-    font-family:'Space Grotesk', sans-serif;
-  }
-
-  .eyebrow, .meta, code, .toc a, .constants-table, .note-label{
-    font-family:'JetBrains Mono', monospace;
-  }
-
-  a{ color:var(--pole-n); text-decoration-color:rgba(31,79,216,0.35); text-underline-offset:3px; }
-  a:hover{ text-decoration-color:var(--pole-n); }
-
-  /* ---------- layout shell ---------- */
-  .shell{
-    display:flex;
-    max-width:1180px;
-    margin:0 auto;
-    align-items:flex-start;
-  }
-
-  nav.toc{
-    position:sticky;
-    top:0;
-    height:100vh;
-    width:var(--nav-w);
-    flex:0 0 var(--nav-w);
-    padding:48px 20px 48px 32px;
-    overflow-y:auto;
-    border-right:1px solid var(--rule);
-  }
-
-  nav.toc .brand{
-    font-size:13px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    color:var(--ink-faint);
-    margin-bottom:28px;
-  }
-
-  nav.toc ol{
-    list-style:none;
-    margin:0;
-    padding:0;
-    font-size:13px;
-  }
-  nav.toc li{ margin-bottom:2px; }
-  nav.toc a{
-    display:block;
-    padding:7px 10px;
-    border-radius:3px;
-    color:var(--ink-soft);
-    text-decoration:none;
-    border-left:2px solid transparent;
-    transition:background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  }
-  nav.toc a:hover{ background:var(--pole-n-tint); color:var(--pole-n); }
-  nav.toc a.active{
-    color:var(--pole-n);
-    border-left-color:var(--pole-n);
-    background:var(--pole-n-tint);
-    font-weight:500;
-  }
-  nav.toc .sub a{ padding-left:22px; font-size:12.5px; color:var(--ink-faint); }
-  nav.toc .sub a.active, nav.toc .sub a:hover{ color:var(--pole-n); }
-
-  main{
-    flex:1 1 auto;
-    min-width:0;
-    padding:0 40px 120px 56px;
-  }
-
-  /* ---------- hero ---------- */
-  .hero{
-    padding:64px 0 40px;
-    max-width:var(--content-w);
-  }
-  .hero .eyebrow{
-    font-size:12.5px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--pole-n);
-    margin-bottom:18px;
-  }
-  .hero h1{
-    font-size:40px;
-    line-height:1.12;
-    font-weight:600;
-    margin:0 0 20px;
-    letter-spacing:-0.01em;
-  }
-  .hero .rq{
-    font-size:18px;
-    color:var(--ink-soft);
-    font-style:italic;
-    border-left:3px solid var(--pole-s);
-    padding-left:16px;
-    margin:0 0 28px;
-  }
-  .hero .meta{
-    font-size:13px;
-    color:var(--ink-faint);
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-  }
-
-  .hero-figure{
-    max-width:var(--content-w);
-    margin:8px 0 8px;
-  }
-  .hero-figure svg{ width:100%; height:auto; display:block; }
-  .hero-figure figcaption{
-    font-size:12.5px;
-    color:var(--ink-faint);
-    margin-top:10px;
-    font-family:'JetBrains Mono', monospace;
-  }
-
-  /* ---------- field-line divider ---------- */
-  .field-divider{ max-width:var(--content-w); margin:52px 0; opacity:0.55; }
-  .field-divider svg{ width:100%; height:28px; display:block; }
-
-  /* ---------- sections ---------- */
-  section.block{
-    max-width:var(--content-w);
-    padding-top:8px;
-    opacity:0;
-    transform:translateY(14px);
-    transition:opacity 0.6s ease, transform 0.6s ease;
-  }
-  section.block.in-view{ opacity:1; transform:translateY(0); }
-
-  .eyebrow-num{
-    font-family:'JetBrains Mono', monospace;
-    font-size:13px;
-    color:var(--pole-n);
-    letter-spacing:0.08em;
-    margin-bottom:10px;
-    display:block;
-  }
-
-  h2{
-    font-size:27px;
-    font-weight:600;
-    margin:0 0 20px;
-    letter-spacing:-0.005em;
-  }
-  h3{
-    font-size:19px;
-    font-weight:600;
-    margin:36px 0 14px;
-    color:var(--ink);
-  }
-  h3 .term-tag{
-    display:inline-block;
-    width:8px; height:8px;
-    background:var(--pole-n);
-    border-radius:50%;
-    margin-right:9px;
-    vertical-align:middle;
-  }
-
-  p{ margin:0 0 18px; }
-  strong.term{ color:var(--pole-n); font-weight:600; }
-
-  ul, ol.plain{ padding-left:22px; margin:0 0 18px; }
-  li{ margin-bottom:8px; }
-
-  /* ---------- equations ---------- */
-  .eq{
-    background:var(--paper-raised);
-    border-left:3px solid var(--pole-n);
-    border-radius:0 6px 6px 0;
-    padding:20px 24px;
-    margin:6px 0 24px;
-    overflow-x:auto;
-  }
-  .eq .katex-display{ margin:0; }
-
-  /* ---------- note callout ---------- */
-  .note{
-    background:var(--pole-s-tint);
-    border-left:3px solid var(--pole-s);
-    border-radius:0 6px 6px 0;
-    padding:16px 22px;
-    margin:8px 0 26px;
-    font-size:15.5px;
-  }
-  .note-label{
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--pole-s);
-    display:block;
-    margin-bottom:6px;
-    font-weight:600;
-  }
-
-  /* ---------- constants table ---------- */
-  table.constants-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13.5px;
-    margin:8px 0 28px;
-    background:var(--paper-raised);
-    border-radius:6px;
-    overflow:hidden;
-  }
-  table.constants-table caption{
-    text-align:left;
-    font-size:12.5px;
-    color:var(--ink-faint);
-    margin-bottom:10px;
-    caption-side:top;
-  }
-  table.constants-table th, table.constants-table td{
-    text-align:left;
-    padding:9px 14px;
-    border-bottom:1px solid var(--rule);
-  }
-  table.constants-table th{
-    color:var(--ink-faint);
-    font-weight:500;
-    text-transform:uppercase;
-    font-size:11px;
-    letter-spacing:0.04em;
-  }
-  table.constants-table tr:last-child td{ border-bottom:none; }
-  table.constants-table td.sym{ color:var(--pole-n); }
-
-  /* ---------- figures ---------- */
-  figure.result{ margin:0 0 40px; }
-  figure.result img{
-    width:100%;
-    display:block;
-    border-radius:6px;
-    border:1px solid var(--rule);
-    background:#fff;
-  }
-  figure.result figcaption{
-    font-size:14px;
-    color:var(--ink-soft);
-    margin-top:10px;
-  }
-
-  /* ---------- code source callout ---------- */
-  .source-card{
-    background:var(--panel-dark);
-    color:var(--panel-dark-ink);
-    border-radius:8px;
-    padding:24px 26px;
-    margin:8px 0 28px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-    flex-wrap:wrap;
-  }
-  .source-card .label{
-    font-family:'JetBrains Mono', monospace;
-    font-size:13px;
-    color:#7C8CAE;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-    margin-bottom:6px;
-  }
-  .source-card .fname{
-    font-family:'JetBrains Mono', monospace;
-    font-size:16px;
-    color:#fff;
-  }
-  .source-card a.btn{
-    font-family:'JetBrains Mono', monospace;
-    font-size:13px;
-    color:var(--panel-dark);
-    background:#E9EDF5;
-    padding:10px 16px;
-    border-radius:5px;
-    text-decoration:none;
-    white-space:nowrap;
-    transition:background 0.15s ease;
-  }
-  .source-card a.btn:hover{ background:#fff; }
-
-  /* ---------- footer / links ---------- */
-  footer.links{
-    max-width:var(--content-w);
-    margin-top:60px;
-    padding-top:32px;
-    border-top:1px solid var(--rule);
-  }
-  footer.links ul{ list-style:none; padding:0; margin:0; }
-  footer.links li{ margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:14.5px; }
-  footer.links .arrow{ color:var(--pole-n); margin-right:8px; }
-
-  /* ---------- mobile nav toggle ---------- */
-  .nav-toggle{
-    display:none;
-    position:fixed;
-    top:16px; left:16px;
-    z-index:50;
-    background:var(--panel-dark);
-    color:#fff;
-    border:none;
-    border-radius:6px;
-    width:42px; height:42px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:14px;
-  }
-
-  @media (max-width: 920px){
-    nav.toc{
-      position:fixed;
-      left:0; top:0;
-      transform:translateX(-100%);
-      background:var(--paper);
-      z-index:40;
-      width:80vw;
-      max-width:320px;
-      transition:transform 0.25s ease;
-      box-shadow:0 0 40px rgba(0,0,0,0.15);
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
+      colors: { accent: '#800000', 'accent-light': '#A13333' }
     }
-    nav.toc.open{ transform:translateX(0); }
-    main{ padding:76px 20px 100px; }
-    .hero{ padding-top:20px; }
-    .hero h1{ font-size:30px; }
-    .nav-toggle{ display:block; }
-    body{ font-size:16.5px; }
   }
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif}
+h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
+body{transition:background-color .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#800000;border-radius:99px}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+.nl{position:relative}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:currentColor;transition:width .22s cubic-bezier(.4,0,.2,1)}
+.nl:hover::after,.nl.on::after{width:100%}
+.nl.on{font-weight:500}
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:rgba(255,255,255,.18);transform:skewX(-20deg);transition:left .4s cubic-bezier(.4,0,.2,1)}
+.shimmer:hover::after{left:160%}
+.pf{overflow:hidden;background:#d4d4d8}
+.pf img,.pf svg{width:100%;height:100%;object-fit:cover;display:block}
+.card-h{transition:transform .28s cubic-bezier(.4,0,.2,1),border-color .18s}
+.card-h:hover{transform:translateY(-4px)}
+.stag{transition:border-color .18s}
+[x-cloak]{display:none!important}
+/* equation callout */
+.eq{overflow-x:auto}
+.eq .katex-display{margin:0}
 </style>
 </head>
-<body>
+<body class="bg-white dark:bg-zinc-950 text-black dark:text-zinc-100 antialiased">
 
-<button class="nav-toggle" id="navToggle" aria-label="Toggle contents">☰</button>
-
-<div class="shell">
-
-  <nav class="toc" id="toc">
-    <div class="brand">Contents</div>
-    <ol>
-      <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#numerical-methods">Numerical Methods</a>
-        <ol class="sub">
-          <li><a href="#euler">Euler's Method</a></li>
-          <li><a href="#rk4">Runge–Kutta (RK4)</a></li>
-        </ol>
-      </li>
-      <li><a href="#meissner">Meissner Effect &amp; Levitation Force</a>
-        <ol class="sub">
-          <li><a href="#lorentz">Lorentz Force Law</a></li>
-          <li><a href="#halbach">Halbach Array</a></li>
-          <li><a href="#london">Second London Equation</a></li>
-          <li><a href="#penetration">London Penetration Depth</a></li>
-        </ol>
-      </li>
-      <li><a href="#motor">Linear Synchronous Motor</a>
-        <ol class="sub">
-          <li><a href="#kirchhoff">Kirchhoff's Voltage Law</a></li>
-        </ol>
-      </li>
-      <li><a href="#constants">Constants</a></li>
-      <li><a href="#solving">Solving the Unknown Constants</a>
-        <ol class="sub">
-          <li><a href="#kconst">Motor Constant &amp; R<sub>m</sub></a></li>
-          <li><a href="#area">Effective Working Area</a></li>
-          <li><a href="#decay">Skin-Effect Decay Rate</a></li>
-        </ol>
-      </li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#discussion">Discussion &amp; Application</a></li>
-      <li><a href="#links">Links</a></li>
-    </ol>
+<!-- ═══ NAV ═══ -->
+<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  :class="sc?'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5':''">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+    <a href="index.html" class="font-display font-bold text-xl tracking-tight relative z-10">
+      <span class="text-black dark:text-white">senai</span><span class="text-accent">sorsa</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-8 text-sm" role="list">
+      <li><a href="#overview"   class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='overview'?'on !text-black dark:!text-white':''">Overview</a></li>
+      <li><a href="#physics"    class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='physics'?'on !text-black dark:!text-white':''">Physics</a></li>
+      <li><a href="#motor"      class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='motor'?'on !text-black dark:!text-white':''">Motor</a></li>
+      <li><a href="#constants"  class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='constants'?'on !text-black dark:!text-white':''">Constants</a></li>
+      <li><a href="#results"    class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='results'?'on !text-black dark:!text-white':''">Results</a></li>
+      <li><a href="#discussion" class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='discussion'?'on !text-black dark:!text-white':''">Discussion</a></li>
+    </ul>
+    <div class="flex items-center gap-3">
+      <button @click="dark=!dark" class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors" :aria-label="dark?'Light mode':'Dark mode'">
+        <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg x-show="dark"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      </button>
+      <a href="index.html" class="hidden md:inline-flex items-center gap-2 shimmer bg-accent text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-accent-light transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+        Portfolio
+      </a>
+      <button @click="mm=!mm" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800" :aria-expanded="mm" aria-label="Toggle menu">
+        <svg x-show="!mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="mm"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
   </nav>
+  <div x-show="mm" x-cloak
+    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
+    class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900">
+    <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
+      <li><a href="#overview"   @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Overview</a></li>
+      <li><a href="#physics"    @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Physics</a></li>
+      <li><a href="#motor"      @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Motor</a></li>
+      <li><a href="#constants"  @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Constants</a></li>
+      <li><a href="#results"    @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Results</a></li>
+      <li><a href="#discussion" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Discussion</a></li>
+      <li class="pt-2 border-t border-zinc-100 dark:border-zinc-900">
+        <a href="index.html" @click="mm=false" class="inline-flex shimmer bg-accent text-white font-medium text-sm px-5 py-2.5 rounded-full">← Back to portfolio</a>
+      </li>
+    </ul>
+  </div>
+</header>
 
-  <main>
+<main>
 
-    <div class="hero">
-      <div class="eyebrow">Extended Essay — Mathematics · High School</div>
-      <h1>Modeling the Meissner Effect with Differential Equations</h1>
-      <p class="rq">Research Question: How can differential equations be used to model and evaluate magnetic levitation in EDS Maglev trains?</p>
-      <div class="meta">
-        <span>Subject: Mathematical Modeling</span>
-        <span>·</span>
-        <span>Reference: JR-Central L0 Series</span>
+<!-- ═══ HERO ═══ -->
+<section id="overview" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+  <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute bottom-1/4 left-0 w-64 h-64 bg-zinc-200/50 dark:bg-zinc-800/30 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="relative z-10 max-w-6xl mx-auto px-6 py-24 w-full">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="reveal text-sm font-medium text-accent tracking-widest uppercase mb-4">Research &amp; Applied Math</p>
+        <h1 class="reveal d1 font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-black dark:text-white mb-6">
+          Modeling the <span class="text-accent">Meissner Effect</span> with Differential Equations
+        </h1>
+        <p class="reveal d2 text-lg text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-lg mb-4">
+          Research Question: how can differential equations be used to model and evaluate magnetic levitation in EDS Maglev trains?
+        </p>
+        <p class="reveal d2 text-base text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-lg mb-10">
+          Deriving the governing ODEs from the Lorentz force law and London equations, fitting unknown constants to a real train's behavior, and comparing Euler vs. RK4 numerical accuracy — Extended Essay in Mathematics.
+        </p>
+        <div class="reveal d3 flex flex-wrap gap-4">
+          <a href="meissner-effect-essay.pdf" class="shimmer inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black font-medium px-7 py-3.5 rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors text-sm">
+            Read full essay (PDF)
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <a href="maglev_model.py" download class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium px-7 py-3.5 rounded-full hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-sm">Download Python source</a>
+        </div>
+        <div class="reveal d4 flex gap-8 mt-14 pt-8 border-t border-zinc-100 dark:border-zinc-900">
+          <div><p class="font-display font-bold text-3xl text-black dark:text-white">5</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Fourier harmonics fit</p></div>
+          <div><p class="font-display font-bold text-3xl text-black dark:text-white">0.1m</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Levitation height matched</p></div>
+          <div><p class="font-display font-bold text-3xl text-black dark:text-white">238s</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Spin-up time matched</p></div>
+        </div>
+      </div>
+      <div class="reveal d2 flex justify-center md:justify-end">
+        <div class="relative w-full max-w-md">
+          <div class="pf w-full aspect-square rounded-3xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-6 flex items-center">
+            <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Halbach array diagram showing alternating magnet polarity concentrating the field on one side">
+              <g stroke="#800000" stroke-width="1.6" fill="none" opacity="0.55">
+                <path d="M 60 92 C 140 20, 260 20, 340 92" />
+                <path d="M 130 100 C 190 46, 300 46, 360 100" />
+                <path d="M 190 105 C 230 74, 300 74, 340 105" />
+                <path d="M 360 92 C 440 20, 560 20, 640 92" />
+                <path d="M 340 100 C 400 46, 510 46, 570 100" />
+                <path d="M 340 105 C 380 74, 450 74, 490 105" />
+              </g>
+              <g stroke="#a1a1aa" stroke-width="1" fill="none" opacity="0.35" stroke-dasharray="2 4">
+                <path d="M 90 168 C 150 190, 250 190, 310 168" />
+                <path d="M 390 168 C 450 190, 550 190, 610 168" />
+              </g>
+              <g>
+                <rect x="60" y="120" width="70" height="40" fill="#fef2f2" stroke="#800000" stroke-width="1.4"/>
+                <line x1="95" y1="152" x2="95" y2="128" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
+                <rect x="130" y="120" width="70" height="40" fill="#fafafa" stroke="#71717a" stroke-width="1.4"/>
+                <line x1="149" y1="140" x2="181" y2="140" stroke="#71717a" stroke-width="2.4" marker-end="url(#archS)"/>
+                <rect x="200" y="120" width="70" height="40" fill="#fef2f2" stroke="#800000" stroke-width="1.4"/>
+                <line x1="235" y1="128" x2="235" y2="152" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
+                <rect x="270" y="120" width="70" height="40" fill="#fafafa" stroke="#71717a" stroke-width="1.4"/>
+                <line x1="321" y1="140" x2="289" y2="140" stroke="#71717a" stroke-width="2.4" marker-end="url(#archS)"/>
+                <rect x="360" y="120" width="70" height="40" fill="#fef2f2" stroke="#800000" stroke-width="1.4"/>
+                <line x1="395" y1="152" x2="395" y2="128" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
+                <rect x="430" y="120" width="70" height="40" fill="#fafafa" stroke="#71717a" stroke-width="1.4"/>
+                <line x1="449" y1="140" x2="481" y2="140" stroke="#71717a" stroke-width="2.4" marker-end="url(#archS)"/>
+                <rect x="500" y="120" width="70" height="40" fill="#fef2f2" stroke="#800000" stroke-width="1.4"/>
+                <line x1="535" y1="128" x2="535" y2="152" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
+                <rect x="570" y="120" width="70" height="40" fill="#fafafa" stroke="#71717a" stroke-width="1.4"/>
+                <line x1="621" y1="140" x2="589" y2="140" stroke="#71717a" stroke-width="2.4" marker-end="url(#archS)"/>
+              </g>
+              <rect x="50" y="160" width="600" height="8" fill="#e4e4e7"/>
+              <defs>
+                <marker id="archN" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#800000"/></marker>
+                <marker id="archS" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#71717a"/></marker>
+              </defs>
+            </svg>
+          </div>
+          <div class="absolute -bottom-4 -left-4 bg-accent text-white font-display font-bold text-sm px-4 py-2.5 rounded-2xl shadow-lg">Halbach Array</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INTRODUCTION + METHODS ═══ -->
+<section class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Introduction</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white mb-6">Why maglev, why differential equations</h2>
+      <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, allowing them to levitate. This repulsion becomes stronger at high speeds, per Faraday's law. This project models velocity, levitation height, and load size for a train based on the Japanese L0 series Maglev (603 kph / 167.5 m/s top speed), then uses the model to derive real-world safety parameters: maximum passenger load and safe voltage-ramp rate.</p>
+      <p class="reveal d3 text-zinc-500 dark:text-zinc-400 leading-relaxed">The derivation manipulates fundamental electromagnetic equations — the Fourier series and Lorentz force law — and Newton's laws to arrive at the ODEs describing the train's behavior. After identifying key constants, <strong class="font-medium text-zinc-700 dark:text-zinc-300">Euler's Method</strong> and <strong class="font-medium text-zinc-700 dark:text-zinc-300">Runge–Kutta (RK4)</strong> are applied to numerically approximate these ODEs, and their accuracy is compared.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <article class="reveal d1 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-12 h-12 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-xl mb-6">
+          <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 17l6-6 4 4 8-8M21 7v6h-6"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-black dark:text-white mb-3">Euler's Method</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Estimates the next point on a curve by taking the current value and adding the local slope times a small step. Inaccurate at larger step sizes, since errors compound with each iteration.</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$f(x_1) = f(x_0) + \frac{df}{dx_0}\Delta x$$</div>
+      </article>
+      <article class="reveal d2 card-h bg-zinc-900 dark:bg-zinc-800 rounded-2xl p-8 border border-zinc-800 hover:border-accent">
+        <div class="w-12 h-12 flex items-center justify-center bg-zinc-800 dark:bg-zinc-700 rounded-xl mb-6">
+          <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17l4-8 4 5 3-9 5 12"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-white mb-3">Runge–Kutta (RK4)</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed mb-4">Incorporates the slope over the whole interval rather than just the starting point, using four weighted slope estimates (k₁–k₄) per step — far more accurate at the same step size.</p>
+        <div class="eq bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHYSICS ═══ -->
+<section id="physics" class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Governing Physics</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white mb-6">The Meissner Effect &amp; Levitation Force</h2>
+      <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed">EDS levitation is based on the <strong class="font-medium text-zinc-700 dark:text-zinc-300">Meissner effect</strong>, where a superconductor forces the magnetic field inside it to zero, creating a surface current that repels the field.</p>
+    </div>
+
+    <div class="space-y-6">
+
+      <article class="reveal d1 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-black dark:text-white">Lorentz Force Law</h3>
+        </div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Gives the repulsion between the superconductor's induced current and the track's magnetic field.</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$F_{Repulsion} = \int J \times B(x,z)\, dV$$</div>
+      </article>
+
+      <article class="reveal d2 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="9" width="6" height="6"/><rect x="15" y="9" width="6" height="6"/><path d="M9 12h6" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-black dark:text-white">Halbach Array</h3>
+        </div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Magnets are arranged in a Halbach array (see hero diagram above), concentrating the field on one side rather than splitting it evenly between both faces. The periodic field is approximated with a Fourier series:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
+      </article>
+
+      <article class="reveal d3 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-black dark:text-white">Second London Equation</h3>
+        </div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Relates superconducting current density to the field:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$\nabla \times J = -\frac{n_se^2}{m}B$$</div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Substituting Ampère's law ($J_s = \nabla\times B/\mu_0$) in for $J$, applying the vector identity $\nabla\times\nabla\times F = \nabla(\nabla\cdot F) - \nabla^2F$, and using $\nabla\cdot B = 0$, the field equation reduces to a second-order linear ODE:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$\frac{d^2B(z')}{dz'^2} = \frac{1}{\lambda_L^2}B(z')$$</div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Assuming an exponential solution $B(z') = B_0e^{rz'}$ gives the characteristic equation $r^2 = 1/\lambda_L^2$. Since the field must decay — not grow — with depth, only the negative root is physical:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$B(z') = B_0e^{-z'/\lambda_L}$$</div>
+      </article>
+
+      <article class="reveal d1 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-black dark:text-white">London Penetration Depth</h3>
+        </div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Integrating $B(z')$ to get vector potential, then current density, then integrating over the superconductor's depth $d_{sc}$ gives the overall surface current:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$J_{overall} = \int_0^{d_{sc}}J\,dz' = \frac{B_0}{\mu_0}\left(1 - e^{-d_{sc}/\lambda_L}\right)$$</div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">The penetration depth $\lambda$ itself depends on train velocity — transitioning from the classic "skin effect" at low speed to the London depth at high speed:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$\lambda(t) = \sqrt{\lambda_L^2 + \frac{\tau}{\mu\sigma\pi v(t)}\left(\frac{v_0}{v(t)}\right)^n}$$</div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Combining $J$ and $B$, applying Parseval's theorem to collapse the Fourier integral, and factoring out effective working area $A_{area}$ gives the final repulsion force:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$F_{Repulsion} = \frac{\left(1-e^{-d/\lambda(t)}\right)}{2\mu_0}A_{area}\sum_{n=1}^{N}e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Applying Newton's second law with gravity gives the levitation ODE:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4">$$\frac{d^2z}{dt^2} = \frac{F_{Repulsion}}{m} - 9.807\,\frac{m}{s^2}$$</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MOTOR ═══ -->
+<section id="motor" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Propulsion</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Linear Synchronous Motor</h2>
+    </div>
+
+    <article class="reveal d1 card-h bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+      <div class="flex items-center gap-4 mb-5">
+        <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h4l3-8 4 16 3-8h2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-black dark:text-white">Kirchhoff's Voltage Law &amp; Motor Current</h3>
+      </div>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">The motor's forward thrust comes from the Lorentz law applied to the motor winding, $F_{motor}(t) = k_tI(t)$. Solving the motor's Kirchhoff-voltage equation for current — using an integrating factor — and substituting back in gives:</p>
+      <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$F_{motor}(t) = k_t\frac{1}{R_m}(V - k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Total drag combines aerodynamic drag and eddy (magnetic damping) drag:</p>
+      <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-5 py-4 mb-5">$$F_{drag} = C_1v(t) + \frac{1}{2}\rho C_dA_fv(t)^2$$</div>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Modeling voltage as a smooth exponential ramp $V(t) = V_{max}(1-e^{-t/r})$ and applying Newton's second law gives the full velocity ODE, driven by $F_{motor}(t) - F_{drag}(t)$ divided by train mass $m$.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ═══ CONSTANTS ═══ -->
+<section id="constants" class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Constants</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white mb-6">Known Values &amp; Unknown Fits</h2>
+      <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed">Values pulled directly from the essay's appendix — real specs modeled on the L0 series (Chuo Shinkansen line), plus Fourier coefficients fit to a 5-harmonic Halbach array.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+      <div class="reveal d1 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 overflow-x-auto">
+        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Table 1 — Velocity model</p>
+        <table class="w-full text-sm">
+          <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800">
+            <tr><td class="py-2 text-accent font-medium">m</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Train mass</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">362,874 kg</td></tr>
+            <tr><td class="py-2 text-accent font-medium">L<sub>m</sub></td><td class="py-2 text-zinc-500 dark:text-zinc-400">Inductance</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">3.3 H</td></tr>
+            <tr><td class="py-2 text-accent font-medium">ρ</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Air density</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">1.225 kg/m³</td></tr>
+            <tr><td class="py-2 text-accent font-medium">A<sub>f</sub></td><td class="py-2 text-zinc-500 dark:text-zinc-400">Frontal area</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">8.9 m²</td></tr>
+            <tr><td class="py-2 text-accent font-medium">C<sub>d</sub></td><td class="py-2 text-zinc-500 dark:text-zinc-400">Drag coeff.</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">0.25</td></tr>
+            <tr><td class="py-2 text-accent font-medium">V<sub>max</sub></td><td class="py-2 text-zinc-500 dark:text-zinc-400">Max voltage</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">20,000 V</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="reveal d2 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 overflow-x-auto">
+        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Table 2 — Levitation model</p>
+        <table class="w-full text-sm">
+          <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800">
+            <tr><td class="py-2 text-accent font-medium">d</td><td class="py-2 text-zinc-500 dark:text-zinc-400">SC depth</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">0.01 m</td></tr>
+            <tr><td class="py-2 text-accent font-medium">τ</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Array period</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">0.5 m</td></tr>
+            <tr><td class="py-2 text-accent font-medium">μ₀</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Free-space μ</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">4π×10⁻⁷ H/m</td></tr>
+            <tr><td class="py-2 text-accent font-medium">σ</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Conductivity</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">10⁵ S/m</td></tr>
+            <tr><td class="py-2 text-accent font-medium">λ<sub>L</sub></td><td class="py-2 text-zinc-500 dark:text-zinc-400">London depth</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">1×10⁻⁷ m</td></tr>
+            <tr><td class="py-2 text-accent font-medium">v₀</td><td class="py-2 text-zinc-500 dark:text-zinc-400">Onset speed</td><td class="py-2 text-right text-zinc-700 dark:text-zinc-300">30 m/s</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="reveal d3 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 overflow-x-auto">
+        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Table 3 — Fourier harmonics</p>
+        <table class="w-full text-sm">
+          <thead><tr class="text-xs text-zinc-400"><td class="py-1">n</td><td class="py-1">k<sub>n</sub></td><td class="py-1">A<sub>n</sub></td><td class="py-1 text-right">B<sub>n</sub></td></tr></thead>
+          <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+            <tr><td class="py-2">1</td><td class="py-2">12.566</td><td class="py-2">0</td><td class="py-2 text-right">1.2</td></tr>
+            <tr><td class="py-2">2</td><td class="py-2">25.133</td><td class="py-2">0.01</td><td class="py-2 text-right">0.3</td></tr>
+            <tr><td class="py-2">3</td><td class="py-2">37.699</td><td class="py-2">0.005</td><td class="py-2 text-right">0.1</td></tr>
+            <tr><td class="py-2">4</td><td class="py-2">50.265</td><td class="py-2">0.002</td><td class="py-2 text-right">0.05</td></tr>
+            <tr><td class="py-2">5</td><td class="py-2">62.832</td><td class="py-2">0.001</td><td class="py-2 text-right">0.0245</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <figure class="hero-figure">
-      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Halbach array diagram showing alternating magnet polarity concentrating the field on one side">
-        <!-- field lines, concentrated above -->
-        <g stroke="#1F4FD8" stroke-width="1.6" fill="none" opacity="0.55">
-          <path d="M 60 92 C 140 20, 260 20, 340 92" />
-          <path d="M 130 100 C 190 46, 300 46, 360 100" />
-          <path d="M 190 105 C 230 74, 300 74, 340 105" />
-          <path d="M 360 92 C 440 20, 560 20, 640 92" />
-          <path d="M 340 100 C 400 46, 510 46, 570 100" />
-          <path d="M 340 105 C 380 74, 450 74, 490 105" />
-        </g>
-        <!-- weak field below -->
-        <g stroke="#8492A6" stroke-width="1" fill="none" opacity="0.3" stroke-dasharray="2 4">
-          <path d="M 90 168 C 150 190, 250 190, 310 168" />
-          <path d="M 390 168 C 450 190, 550 190, 610 168" />
-        </g>
+    <div class="reveal d1 bg-red-50 dark:bg-zinc-900 border border-red-100 dark:border-zinc-800 rounded-2xl p-6 mb-14">
+      <p class="text-xs font-medium text-accent uppercase tracking-widest mb-2">Implementation note</p>
+      <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">Motor resistance ($R_m$) appears in the derivation but wasn't recorded in the original appendix, so it's solved jointly with $k$ below rather than looked up.</p>
+    </div>
 
-        <!-- magnet blocks -->
-        <g font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">
-          <!-- block 1: arrow up -->
-          <rect x="60" y="120" width="70" height="40" fill="#E7EDFC" stroke="#1F4FD8" stroke-width="1.4"/>
-          <line x1="95" y1="152" x2="95" y2="128" stroke="#1F4FD8" stroke-width="2.4" marker-end="url(#archN)"/>
+    <div class="mb-10 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Constant Fitting</p>
+      <h3 class="reveal d1 font-display font-bold text-3xl text-black dark:text-white mb-4">Solving for the Unknown Constants</h3>
+      <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed">Several constants — $k_t$, $A_{area}$, $v_0$, $n$ — aren't published anywhere. They were inferred by forcing the model to match known real-world behavior of the L0. This was the part of the project that felt the least like "plugging into a formula" and the most like engineering judgment.</p>
+    </div>
 
-          <!-- block 2: arrow right -->
-          <rect x="130" y="120" width="70" height="40" fill="#FBEBE1" stroke="#C4571F" stroke-width="1.4"/>
-          <line x1="149" y1="140" x2="181" y2="140" stroke="#C4571F" stroke-width="2.4" marker-end="url(#archS)"/>
+    <div class="grid md:grid-cols-3 gap-6">
+      <article class="reveal d1 card-h bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <h4 class="font-display font-bold text-lg text-black dark:text-white mb-3">Motor Constant &amp; R<sub>m</sub></h4>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-3">Assuming an ideal motor ($k_t \approx k_e \approx k$), the steady-state balance at top speed gives one equation with two unknowns. The second condition: the real L0 reaches top speed in ~4 minutes, so $R_m$ was tuned until simulated spin-up matched.</p>
+        <p class="text-sm text-zinc-700 dark:text-zinc-300 font-medium">R<sub>m</sub> ≈ 2.3 Ω, k ≈ 114.22 — verified to 8 significant figures.</p>
+      </article>
+      <article class="reveal d2 card-h bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <h4 class="font-display font-bold text-lg text-black dark:text-white mb-3">Effective Working Area</h4>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-3">At maximum levitation, net vertical force is zero: $F_{Repulsion} = mg$. Plugging in the train's mass and solving for the one unknown gives:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-4 py-3 text-sm">$$A_{area} \approx 76.44\ m^2$$</div>
+      </article>
+      <article class="reveal d3 card-h bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <h4 class="font-display font-bold text-lg text-black dark:text-white mb-3">Skin-Effect Decay Rate</h4>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-3">Bracketed by two conditions: liftoff at 30 m/s, and skin depth shrinking to sub-nanometer scale at top speed (168 m/s). The smallest integer satisfying both:</p>
+        <div class="eq bg-zinc-50 dark:bg-zinc-950 border-l-4 border-accent rounded-r-lg px-4 py-3 text-sm">$$n = 11$$</div>
+      </article>
+    </div>
+  </div>
+</section>
 
-          <!-- block 3: arrow down -->
-          <rect x="200" y="120" width="70" height="40" fill="#E7EDFC" stroke="#1F4FD8" stroke-width="1.4"/>
-          <line x1="235" y1="128" x2="235" y2="152" stroke="#1F4FD8" stroke-width="2.4" marker-end="url(#archN)"/>
+<!-- ═══ RESULTS ═══ -->
+<section id="results" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Results</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Euler vs. RK4</h2>
+    </div>
 
-          <!-- block 4: arrow left -->
-          <rect x="270" y="120" width="70" height="40" fill="#FBEBE1" stroke="#C4571F" stroke-width="1.4"/>
-          <line x1="321" y1="140" x2="289" y2="140" stroke="#C4571F" stroke-width="2.4" marker-end="url(#archS)"/>
-
-          <!-- repeat for second period -->
-          <rect x="360" y="120" width="70" height="40" fill="#E7EDFC" stroke="#1F4FD8" stroke-width="1.4"/>
-          <line x1="395" y1="152" x2="395" y2="128" stroke="#1F4FD8" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="430" y="120" width="70" height="40" fill="#FBEBE1" stroke="#C4571F" stroke-width="1.4"/>
-          <line x1="449" y1="140" x2="481" y2="140" stroke="#C4571F" stroke-width="2.4" marker-end="url(#archS)"/>
-
-          <rect x="500" y="120" width="70" height="40" fill="#E7EDFC" stroke="#1F4FD8" stroke-width="1.4"/>
-          <line x1="535" y1="128" x2="535" y2="152" stroke="#1F4FD8" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="570" y="120" width="70" height="40" fill="#FBEBE1" stroke="#C4571F" stroke-width="1.4"/>
-          <line x1="621" y1="140" x2="589" y2="140" stroke="#C4571F" stroke-width="2.4" marker-end="url(#archS)"/>
-        </g>
-
-        <!-- track base -->
-        <rect x="50" y="160" width="600" height="8" fill="#D3DBE6"/>
-        <text x="350" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#8492A6">Halbach array — field reinforces above, cancels below</text>
-
-        <defs>
-          <marker id="archN" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#1F4FD8"/>
-          </marker>
-          <marker id="archS" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#C4571F"/>
-          </marker>
-        </defs>
-      </svg>
-      <figcaption>FIG. 0 — Halbach magnet arrangement: alternating polarity blocks concentrate the field on the upper face and cancel it below, the arrangement used throughout this model.</figcaption>
-    </figure>
-
-    <section class="block" id="introduction">
-      <span class="eyebrow-num">01 — INTRODUCTION</span>
-      <p>EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, allowing them to levitate. This repulsion becomes stronger at high speeds, according to Faraday's law. This project models velocity, levitation height, and load size for a train based on the Japanese L0 series Maglev (603 kph / 167.5 m/s top speed), then uses the model to derive real-world safety parameters: maximum passenger load and safe voltage-ramp rate.</p>
-      <p>The derivation manipulates fundamental electromagnetic equations — the Fourier series and Lorentz force law — and Newton's laws, using integration and differentiation to arrive at the ODEs (ordinary differential equations) that describe the train's behavior. After identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge–Kutta (RK4)</strong> method are applied to numerically approximate these ODEs, and their accuracy is compared.</p>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="numerical-methods">
-      <span class="eyebrow-num">02 — NUMERICAL METHODS</span>
-      <h2>Numerical Methods</h2>
-
-      <h3 id="euler"><span class="term-tag"></span>Euler's Method</h3>
-      <p><strong class="term">Euler's Method</strong> estimates the next point on a curve by taking the current value and adding the local slope times a small step:</p>
-      <div class="eq">$$f(x_1) = f(x_0) + \frac{df}{dx_0}\Delta x$$</div>
-      <p>This is inaccurate at larger step sizes, since errors compound with each iteration.</p>
-
-      <h3 id="rk4"><span class="term-tag"></span>Runge–Kutta (RK4)</h3>
-      <p><strong class="term">RK4</strong> incorporates the slope over the <em>whole interval</em> rather than just the starting point, using four weighted slope estimates (<code>k₁</code>–<code>k₄</code>) per step:</p>
-      <div class="eq">$$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$</div>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="meissner">
-      <span class="eyebrow-num">03 — GOVERNING PHYSICS</span>
-      <h2>The Meissner Effect &amp; Levitation Force</h2>
-      <p>EDS is a type of levitation based on the <strong class="term">Meissner effect</strong>, where a superconductor forces the magnetic field inside it to zero, creating a surface current that repels the field.</p>
-
-      <h3 id="lorentz"><span class="term-tag"></span>The Lorentz Force Law</h3>
-      <div class="eq">$$F_{Repulsion} = \int J \times B(x,z)\, dV$$</div>
-
-      <h3 id="halbach"><span class="term-tag"></span>The Halbach Array</h3>
-      <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 0, above), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
-      <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
-
-      <h3 id="london"><span class="term-tag"></span>The Second London Equation</h3>
-      <p>The <strong class="term">second London equation</strong> relates superconducting current density to the field:</p>
-      <div class="eq">$$\nabla \times J = -\frac{n_se^2}{m}B$$</div>
-      <p>Substituting Ampère's law ($J_s = \nabla\times B/\mu_0$) in for $J$ gives:</p>
-      <div class="eq">$$\nabla\times\nabla\times\frac{B}{\mu_0} = -\frac{n_se^2}{m}B$$</div>
-      <p>Applying the vector identity $\nabla\times\nabla\times F = \nabla(\nabla\cdot F) - \nabla^2F$, and using the fact that $\nabla\cdot B = 0$ for any magnetic field, the left side collapses to just $-\nabla^2B$. Substituting in the London penetration depth definition, $\lambda_L^2 = m/(\mu_0n_se^2)$, and restricting to the $z'$ direction (depth into the superconductor) turns the del operator into an ordinary second derivative:</p>
-      <div class="eq">$$\frac{d^2B(z')}{dz'^2} = \frac{1}{\lambda_L^2}B(z')$$</div>
-      <p>This is a second-order linear ODE. Assuming an exponential solution $B(z') = B_0e^{rz'}$ and substituting back in gives the characteristic equation $r^2 = 1/\lambda_L^2$, so $r = \pm1/\lambda_L$. Since the field must decay — not grow — with depth, only the negative root is physical:</p>
-      <div class="eq">$$B(z') = B_0e^{-z'/\lambda_L}$$</div>
-
-      <h3 id="penetration"><span class="term-tag"></span>From Field to Current: London Penetration Depth</h3>
-      <p>The magnetic vector potential $A$ relates to $B$ by $B(z') = dA/dz'$. Integrating the decay equation (with the constant of integration set to 0, since the field must be able to fully decay to zero) gives $A = -\lambda_LB_0e^{-z'/\lambda_L}$. Substituting this into the London current relation $J = -A/(\mu_0\lambda_L^2)$ gives the current at any depth:</p>
-      <div class="eq">$$J(z') = \frac{B_0e^{-z'/\lambda_L}}{\mu_0\lambda_L}$$</div>
-      <p>Integrating this over the superconductor's depth $d_{sc}$ gives the overall surface current:</p>
-      <div class="eq">$$J_{overall} = \int_0^{d_{sc}}J\,dz' = \frac{B_0}{\mu_0}\left(1 - e^{-d_{sc}/\lambda_L}\right)$$</div>
-      <p>The <strong class="term">London penetration depth</strong> $\lambda$ itself depends on train velocity — it transitions from the classic "skin effect" at low speed to the London depth at high speed:</p>
-      <div class="eq">$$\lambda(t) = \sqrt{\lambda_L^2 + \frac{\tau}{\mu\sigma\pi v(t)}\left(\frac{v_0}{v(t)}\right)^n}$$</div>
-      <p>Combining $J$ and $B$ (cross product simplifies to multiplication since the two are perpendicular), applying Parseval's theorem to collapse the Fourier integral, and factoring out the effective working area $A_{area}$ gives the final repulsion force:</p>
-      <div class="eq">$$F_{Repulsion} = \frac{\left(1-e^{-d/\lambda(t)}\right)}{2\mu_0}A_{area}\sum_{n=1}^{N}e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
-      <p>Applying <strong class="term">Newton's second law</strong> with gravity gives the levitation ODE:</p>
-      <div class="eq">$$\frac{d^2z}{dt^2} = \frac{F_{Repulsion}}{m} - 9.807\,\frac{m}{s^2}$$</div>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="motor">
-      <span class="eyebrow-num">04 — PROPULSION</span>
-      <h2>Linear Synchronous Motor</h2>
-
-      <h3 id="kirchhoff"><span class="term-tag"></span>Kirchhoff's Voltage Law &amp; Motor Current</h3>
-      <p>The motor's forward thrust comes from the Lorentz law applied to the motor winding, $F_{motor}(t) = k_tI(t)$. Solving the motor's <strong class="term">Kirchhoff-voltage equation</strong> for current — using an integrating factor — and substituting back in gives:</p>
-      <div class="eq">$$F_{motor}(t) = k_t\frac{1}{R_m}(V - k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
-      <p>Total drag combines aerodynamic drag and eddy (magnetic damping) drag:</p>
-      <div class="eq">$$F_{drag} = C_1v(t) + \frac{1}{2}\rho C_dA_fv(t)^2$$</div>
-      <p>Modeling voltage as a smooth exponential ramp $V(t) = V_{max}(1-e^{-t/r})$ and applying Newton's second law gives the full velocity ODE, driven by $F_{motor}(t) - F_{drag}(t)$ divided by train mass $m$.</p>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="constants">
-      <span class="eyebrow-num">05 — CONSTANTS</span>
-      <h2>Constants</h2>
-      <p>Values pulled directly from the essay's appendix — real specs modeled on the L0 series (Chuo Shinkansen line), plus Fourier coefficients fit to a 5-harmonic Halbach array.</p>
-
-      <table class="constants-table">
-        <caption>Table 1 — Velocity model</caption>
-        <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
-        <tr><td class="sym">m</td><td>Train mass</td><td>362,874 kg</td></tr>
-        <tr><td class="sym">L<sub>m</sub></td><td>Motor phase inductance</td><td>3.3 H</td></tr>
-        <tr><td class="sym">ρ</td><td>Air density</td><td>1.225 kg/m³</td></tr>
-        <tr><td class="sym">A<sub>f</sub></td><td>Frontal area</td><td>8.9 m²</td></tr>
-        <tr><td class="sym">C<sub>d</sub></td><td>Drag coefficient</td><td>0.25</td></tr>
-        <tr><td class="sym">C<sub>1</sub></td><td>Eddy drag coefficient</td><td>29 N</td></tr>
-        <tr><td class="sym">V<sub>max</sub></td><td>Maximum drive voltage</td><td>20,000 V</td></tr>
-      </table>
-
-      <table class="constants-table">
-        <caption>Table 2 — Levitation model</caption>
-        <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
-        <tr><td class="sym">d</td><td>Superconductor depth</td><td>0.01 m</td></tr>
-        <tr><td class="sym">τ</td><td>Halbach array period length</td><td>0.5 m</td></tr>
-        <tr><td class="sym">μ₀</td><td>Permeability of free space</td><td>4π × 10⁻⁷ H/m</td></tr>
-        <tr><td class="sym">σ</td><td>Conductivity of material</td><td>10⁵ S/m</td></tr>
-        <tr><td class="sym">λ<sub>L</sub></td><td>London penetration depth</td><td>1 × 10⁻⁷ m</td></tr>
-        <tr><td class="sym">v₀</td><td>Eddy-current onset speed</td><td>30 m/s</td></tr>
-      </table>
-
-      <table class="constants-table">
-        <caption>Table 3 — Fourier / Halbach harmonics</caption>
-        <tr><th>n</th><th>k<sub>n</sub></th><th>A<sub>n</sub></th><th>B<sub>n</sub></th></tr>
-        <tr><td>1</td><td>12.566</td><td>0</td><td>1.2</td></tr>
-        <tr><td>2</td><td>25.133</td><td>0.01</td><td>0.3</td></tr>
-        <tr><td>3</td><td>37.699</td><td>0.005</td><td>0.1</td></tr>
-        <tr><td>4</td><td>50.265</td><td>0.002</td><td>0.05</td></tr>
-        <tr><td>5</td><td>62.832</td><td>0.001</td><td>0.0245</td></tr>
-      </table>
-
-      <div class="note">
-        <span class="note-label">Implementation Note</span>
-        Motor resistance ($R_m$) appears in the derivation but wasn't recorded in the original appendix, so it's solved jointly with $k$ in the section below rather than looked up.
-      </div>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="solving">
-      <span class="eyebrow-num">06 — CONSTANT FITTING</span>
-      <h2>Solving for the Unknown Constants</h2>
-      <p>Several constants in these equations — $k_t$, $A_{area}$, $v_0$, $n$ — aren't published anywhere. They have to be <em>inferred</em> by forcing the model to match known real-world behavior of the L0. This was the part of the project that felt the least like "plugging into a formula" and the most like actual engineering judgment.</p>
-
-      <h3 id="kconst"><span class="term-tag"></span>Motor Constant &amp; Resistance ($k$, $R_m$)</h3>
-      <p>Assuming an ideal motor ($k_t \approx k_e \approx k$, from conservation of energy — electrical power in equals mechanical power out), the steady-state force balance $F_{motor}(v_{top}) = F_{drag}(v_{top})$ at the L0's real top speed (167.5 m/s) gives one equation with two unknowns, $k$ and $R_m$ — underdetermined on its own. The second condition comes from the L0's real spin-up time: the real train reaches top speed in about 4 minutes, so $R_m$ was tuned until the simulated spin-up time matched that window, and $k$ was solved from the resulting quadratic.</p>
-      <p>This pins down $R_m \approx 2.3\ \Omega$ and $k \approx 114.22$, which satisfy the steady-state balance to 8 significant figures ($F_{motor}(167.5) = F_{drag}(167.5) = 43{,}092.908\ N$ on both sides) <em>and</em> reproduce the correct spin-up time — two independent real-world checks, not just an algebraic fit.</p>
-
-      <h3 id="area"><span class="term-tag"></span>Effective Working Area ($A_{area}$)</h3>
-      <p>At the point of maximum levitation, net vertical force is zero: $F_{Repulsion} = mg$. Plugging the train's mass into the repulsion equation and solving for the one unknown (area) gives:</p>
-      <div class="eq">$$9.807(362{,}874) = 4.6566\times10^4 \cdot A_{area} \implies A_{area} \approx 76.44\ m^2$$</div>
-
-      <h3 id="decay"><span class="term-tag"></span>Skin-Effect Decay Rate ($n$)</h3>
-      <p>Levitation visibly starts around 30 m/s, so $v_0 = 30$, solving for the penetration depth at that speed using the same zero-net-force condition gives $n \approx 1.001$ at onset — but that alone under-constrains $n$. A second condition was needed: at the train's <em>top</em> speed (168 m/s), the skin depth should have shrunk to sub-nanometer scale — essentially zero, since the London depth itself is only ~100 nm. Setting up that inequality and solving:</p>
-      <div class="eq">$$10^{-9} \geq \left(\frac{5}{28}\right)^n \implies n \geq \log_{5/28}(7.896\times10^{-9}) \approx 10.83$$</div>
-      <p>So $n=11$ is the smallest integer satisfying both the onset behavior <em>and</em> the high-speed limit — a constant derived from bracketing two physical regimes rather than fit to a single data point.</p>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="results">
-      <span class="eyebrow-num">07 — RESULTS</span>
-      <h2>Results</h2>
-
-      <h3><span class="term-tag"></span>Velocity: Euler vs. RK4</h3>
-      <p>Both methods track almost identically here, since velocity changes smoothly with no sharp local curvature for Euler's method to mishandle. The curve plateaus near 167.5 m/s within the L0's real ~4-minute spin-up window.</p>
-      <figure class="result">
-        <img src="fig_velocity.png" alt="Velocity of the maglev train over time, Euler vs RK4, plateauing near 167.5 m/s">
-        <figcaption>FIG. 1 — Velocity over the first 300 s. Both numerical methods agree closely.</figcaption>
-      </figure>
-
-      <h3><span class="term-tag"></span>Levitation Height: Euler vs. RK4</h3>
-      <p>This is the more interesting case. Euler's method uses the acceleration at a single point per step, which over-expresses the slight oscillation from the counteracting repulsion/gravity forces — visibly diverging. RK4 averages the slope across the interval, canceling the oscillation out and settling smoothly at ≈0.1 m, matching the real L0's levitation gap.</p>
-      <figure class="result">
-        <img src="fig_levitation.png" alt="Levitation height over time, Euler diverging into oscillation while RK4 settles smoothly near 0.1 meters">
-        <figcaption>FIG. 2 — Levitation height in the first two minutes. Euler's method (left) diverges into unbounded oscillation; RK4 (right) settles cleanly.</figcaption>
-      </figure>
-
-      <p>This gap in accuracy is <strong class="term">global error</strong>: RK4's error scales with step size to the 4th power, versus 1st power for Euler — so RK4 stays accurate at step sizes where Euler visibly breaks down.</p>
-    </section>
-
-    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#1F4FD8" stroke-width="1.4" fill="none"/></svg></div>
-
-    <section class="block" id="discussion">
-      <span class="eyebrow-num">08 — APPLICATION</span>
-      <h2>Discussion &amp; Application</h2>
-      <p>The model surfaces two real safety parameters for the train:</p>
-      <ol class="plain">
-        <li><strong>Voltage ramp rate:</strong> the maximum passenger-safe acceleration is ~1.0 m/s². Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</li>
-        <li><strong>Load limit:</strong> higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg — with the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</li>
-      </ol>
-    </section>
-
-    <footer class="links" id="links">
-      <div class="source-card">
-        <div>
-          <div class="label">Complete implementation</div>
-          <div class="fname">maglev_model.py</div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <article class="reveal d1 card-h rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="pf w-full h-56 bg-white">
+          <img src="fig_velocity.png" alt="Velocity of the maglev train over time, Euler vs RK4, plateauing near 167.5 m/s" loading="lazy">
         </div>
-        <a class="btn" href="maglev_model.py" download>Download source →</a>
-      </div>
-      <ul>
-        <li><span class="arrow">→</span><a href="meissner-effect-essay.pdf">Full Extended Essay (PDF, 48 pages)</a></li>
-        <li><span class="arrow">→</span><a href="https://github.com/senai-sorsa" target="_blank" rel="noopener">GitHub</a></li>
-      </ul>
-    </footer>
+        <div class="p-7">
+          <h3 class="font-display font-bold text-xl text-black dark:text-white mb-2">Velocity</h3>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Both methods track almost identically here, since velocity changes smoothly with no sharp local curvature for Euler's method to mishandle. The curve plateaus near 167.5 m/s within the L0's real ~4-minute spin-up window.</p>
+        </div>
+      </article>
+      <article class="reveal d2 card-h rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="pf w-full h-56 bg-white">
+          <img src="fig_levitation.png" alt="Levitation height over time, Euler diverging into oscillation while RK4 settles smoothly near 0.1 meters" loading="lazy">
+        </div>
+        <div class="p-7">
+          <h3 class="font-display font-bold text-xl text-black dark:text-white mb-2">Levitation Height</h3>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Euler's method uses the acceleration at a single point per step, over-expressing the slight oscillation from counteracting repulsion/gravity forces — visibly diverging. RK4 averages the slope across the interval, settling smoothly at ≈0.1 m.</p>
+        </div>
+      </article>
+    </div>
+    <p class="reveal d3 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mt-8 max-w-2xl">This gap is <strong class="font-medium text-zinc-700 dark:text-zinc-300">global error</strong>: RK4's error scales with step size to the 4th power, versus 1st power for Euler — so RK4 stays accurate at step sizes where Euler visibly breaks down.</p>
+  </div>
+</section>
 
-  </main>
-</div>
+<!-- ═══ DISCUSSION ═══ -->
+<section id="discussion" class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-14 max-w-2xl">
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Application</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Discussion &amp; Real-World Safety Parameters</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <article class="reveal d1 card-h bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-10 h-10 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg mb-5 text-accent">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-lg text-black dark:text-white mb-2">Voltage Ramp Rate</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">The maximum passenger-safe acceleration is ~1.0 m/s². Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</p>
+      </article>
+      <article class="reveal d2 card-h bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-10 h-10 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg mb-5 text-accent">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-lg text-black dark:text-white mb-2">Load Limit</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg — with the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LINKS / CTA ═══ -->
+<section class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="bg-zinc-900 dark:bg-zinc-800 rounded-3xl p-10 md:p-16 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute bottom-0 left-0 w-40 h-40 bg-accent/10 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
+      <div class="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Full Source</p>
+          <h2 class="reveal d1 font-display font-bold text-4xl text-white leading-tight mb-5">Read the full essay,<br>run the model</h2>
+          <p class="reveal d2 text-zinc-400 leading-relaxed">The full 48-page essay covers every derivation step in detail. The Python source implements every equation above — Euler and RK4 solvers, the levitation and velocity ODEs, and the constant-fitting logic.</p>
+        </div>
+        <div class="reveal d3 flex flex-col gap-4">
+          <a href="meissner-effect-essay.pdf" class="shimmer flex items-center justify-between gap-3 bg-white text-zinc-900 font-display font-bold text-sm px-6 py-4 rounded-xl hover:bg-zinc-100 transition-colors">
+            Full Extended Essay (PDF)
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a href="maglev_model.py" download class="shimmer flex items-center justify-between gap-3 bg-accent text-white font-display font-bold text-sm px-6 py-4 rounded-xl hover:bg-accent-light transition-colors">
+            maglev_model.py
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-zinc-100 dark:border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-zinc-400">© <span id="yr"></span> Senai Sorsa. All rights reserved. <br> <a href="index.html" class="hover:text-accent transition-colors">← Back to portfolio</a></p>
+    <p class="text-xs text-zinc-500">Built with
+      <a href="https://tailwindcss.com" rel="noopener noreferrer" target="_blank" class="hover:text-accent transition-colors">Tailwind CSS</a>,
+      <a href="https://alpinejs.dev" rel="noopener noreferrer" target="_blank" class="hover:text-accent transition-colors">Alpine.js</a>
+      &amp;
+      <a href="https://katex.org" rel="noopener noreferrer" target="_blank" class="hover:text-accent transition-colors">KaTeX</a>
+    </p>
+  </div>
+</footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false});"></script>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    renderMathInElement(document.body, {
-      delimiters: [
-        {left: "$$", right: "$$", display: true},
-        {left: "$", right: "$", display: false}
-      ],
-      throwOnError: false
-    });
-  });
-
-  // mobile nav toggle
-  const toggle = document.getElementById('navToggle');
-  const toc = document.getElementById('toc');
-  toggle.addEventListener('click', () => toc.classList.toggle('open'));
-  toc.addEventListener('click', (e) => { if (e.target.tagName === 'A') toc.classList.remove('open'); });
-
-  // scroll reveal
-  const blocks = document.querySelectorAll('section.block');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('in-view');
-    });
-  }, { threshold: 0.08 });
-  blocks.forEach(b => revealObserver.observe(b));
-
-  // active TOC highlight
-  const navLinks = document.querySelectorAll('nav.toc a');
-  const sections = document.querySelectorAll('section.block[id], footer.links[id]');
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const id = entry.target.getAttribute('id');
-      const link = document.querySelector(`nav.toc a[href="#${id}"]`);
-      if (!link) return;
-      if (entry.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+function app() {
+  return {
+    dark: false,
+    mm: false,
+    sc: false,
+    s: 'overview',
+    init() {
+      this.dark = localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      this.$watch('dark', v => localStorage.setItem('theme', v ? 'dark' : 'light'));
+      window.addEventListener('scroll', () => {
+        this.sc = window.scrollY > 20;
+        this.updateSection();
+      }, { passive: true });
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+      document.getElementById('yr').textContent = new Date().getFullYear();
+    },
+    updateSection() {
+      const ids = ['discussion','results','constants','motor','physics','overview'];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 130) { this.s = id; return; }
       }
-    });
-  }, { rootMargin: '-15% 0px -70% 0px' });
-  sections.forEach(s => navObserver.observe(s));
+    }
+  }
+}
 </script>
-
 </body>
 </html>

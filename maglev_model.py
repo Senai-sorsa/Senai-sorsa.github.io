@@ -11,13 +11,15 @@ import matplotlib.pyplot as plt
 # Constants (Appendix, Table 1 & 2)
 # ---------------------------------------------------------------
 m       = 362874        # kg, train mass (12-car config used in the essay)
-# NOTE: motor resistance (Rm) is used in the essay's derivation (3.2.1) but is
-# not listed in Appendix Table 1. It's set here to a representative value that
-# reproduces the essay's reported behavior (speed rising smoothly toward the
-# ~167.5 m/s / 603 kph top speed of the real L0 within a few minutes).
+# Rm and k are solved together, not chosen independently: fixing v_top =
+# 167.5 m/s as the true steady-state equilibrium and requiring the model to
+# reach that speed within ~4 minutes (matching the real L0's spin-up time)
+# pins down both constants via the quadratic in the "Solving for the Unknown
+# Constants" section below. Rm = 2.3 Ω, k = 114.223 satisfy F_motor(v_top) =
+# F_drag(v_top) exactly (43092.908 N on both sides).
 Lm      = 3.3            # H, motor phase inductance
-Rm      = 1.5             # ohm, motor resistance (representative — not in appendix)
-k       = 21.32674       # N/A == V/(m/s), kt ≈ ke ≈ k (ideal-motor assumption)
+Rm      = 2.3              # ohm, motor resistance (solved jointly with k)
+k       = 114.22254       # N/A == V/(m/s), kt ≈ ke ≈ k (ideal-motor assumption)
 C1      = 29              # N·s/m, eddy drag coefficient
 rho     = 1.225           # kg/m^3, air density
 Cd      = 0.25            # drag coefficient
