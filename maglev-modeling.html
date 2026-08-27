@@ -369,52 +369,8 @@
     </div>
 
     <figure class="hero-figure">
-      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Halbach array diagram showing alternating magnet polarity concentrating the field on one side">
-        <g stroke="#800000" stroke-width="1.6" fill="none" opacity="0.55">
-          <path d="M 60 92 C 140 20, 260 20, 340 92" />
-          <path d="M 130 100 C 190 46, 300 46, 360 100" />
-          <path d="M 190 105 C 230 74, 300 74, 340 105" />
-          <path d="M 360 92 C 440 20, 560 20, 640 92" />
-          <path d="M 340 100 C 400 46, 510 46, 570 100" />
-          <path d="M 340 105 C 380 74, 450 74, 490 105" />
-        </g>
-        <g stroke="#A1A1AA" stroke-width="1" fill="none" opacity="0.3" stroke-dasharray="2 4">
-          <path d="M 90 168 C 150 190, 250 190, 310 168" />
-          <path d="M 390 168 C 450 190, 550 190, 610 168" />
-        </g>
-        <g font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">
-          <rect x="60" y="120" width="70" height="40" fill="#FDF2F2" stroke="#800000" stroke-width="1.4"/>
-          <line x1="95" y1="152" x2="95" y2="128" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="130" y="120" width="70" height="40" fill="#F4F4F5" stroke="#71717A" stroke-width="1.4"/>
-          <line x1="149" y1="140" x2="181" y2="140" stroke="#71717A" stroke-width="2.4" marker-end="url(#archS)"/>
-
-          <rect x="200" y="120" width="70" height="40" fill="#FDF2F2" stroke="#800000" stroke-width="1.4"/>
-          <line x1="235" y1="128" x2="235" y2="152" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="270" y="120" width="70" height="40" fill="#F4F4F5" stroke="#71717A" stroke-width="1.4"/>
-          <line x1="321" y1="140" x2="289" y2="140" stroke="#71717A" stroke-width="2.4" marker-end="url(#archS)"/>
-
-          <rect x="360" y="120" width="70" height="40" fill="#FDF2F2" stroke="#800000" stroke-width="1.4"/>
-          <line x1="395" y1="152" x2="395" y2="128" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="430" y="120" width="70" height="40" fill="#F4F4F5" stroke="#71717A" stroke-width="1.4"/>
-          <line x1="449" y1="140" x2="481" y2="140" stroke="#71717A" stroke-width="2.4" marker-end="url(#archS)"/>
-
-          <rect x="500" y="120" width="70" height="40" fill="#FDF2F2" stroke="#800000" stroke-width="1.4"/>
-          <line x1="535" y1="128" x2="535" y2="152" stroke="#800000" stroke-width="2.4" marker-end="url(#archN)"/>
-
-          <rect x="570" y="120" width="70" height="40" fill="#F4F4F5" stroke="#71717A" stroke-width="1.4"/>
-          <line x1="621" y1="140" x2="589" y2="140" stroke="#71717A" stroke-width="2.4" marker-end="url(#archS)"/>
-        </g>
-        <rect x="50" y="160" width="600" height="8" fill="#E4E4E7"/>
-        <text x="350" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#A1A1AA">Halbach array — field reinforces above, cancels below</text>
-        <defs>
-          <marker id="archN" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#800000"/></marker>
-          <marker id="archS" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#71717A"/></marker>
-        </defs>
-      </svg>
-      <figcaption>FIG. 0 — Halbach magnet arrangement: alternating polarity blocks concentrate the field on the upper face and cancel it below, the arrangement used throughout this model.</figcaption>
+      <img src="maglev_train.jpg" alt="The Japanese L0 series SCMaglev train, the electrodynamic suspension maglev this model is based on" style="width:100%; border-radius:8px; display:block;">
+      <figcaption>FIG. 0 — The JR‑Central L0 series SCMaglev, the EDS train this model is based on.</figcaption>
     </figure>
 
     <section class="block" id="introduction">
@@ -450,7 +406,7 @@
       <div class="eq">$$F_{Repulsion} = \int J \times B(x,z)\, dV$$</div>
 
       <h3 id="halbach"><span class="term-tag"></span>The Halbach Array</h3>
-      <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 0, above), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
+      <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
       <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
 
       <figure class="result">
@@ -488,8 +444,8 @@
       <h2>Linear Synchronous Motor</h2>
 
       <figure class="result">
-        <img src="fig_motor_diagram.png" alt="Diagram of a linear synchronous motor: alternating N and S magnets on rails above and below the train repel matching segments on the train body, driving it forward">
-        <figcaption>FIG. 4 — Linear synchronous motor. Alternating N/S rail segments repel the matching segments on the train body; as the polarity pattern shifts down the rail, the repulsion travels with it, driving the train forward.</figcaption>
+        <img src="fig_motor_diagram.png" alt="Diagram showing a rotary motor's stator and rotor unrolled flat into a linear synchronous motor, with the primary (stator) and secondary (rotor) labeled">
+        <figcaption>FIG. 4 — A linear synchronous motor is a rotary motor "unrolled" flat: the stator (primary) and rotor (secondary) become straight rails instead of concentric cylinders, producing straight-line thrust instead of torque.</figcaption>
       </figure>
 
       <h3 id="kirchhoff"><span class="term-tag"></span>Kirchhoff's Voltage Law &amp; Motor Current</h3>
