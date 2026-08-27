@@ -252,6 +252,7 @@
   /* ---------- figures ---------- */
   figure.result{ margin:0 0 40px; }
   figure.result img{ width:100%; display:block; border-radius:6px; border:1px solid var(--rule); background:#fff; }
+  figure.result.compact{ max-width:480px; }
   figure.result figcaption{ font-size:14px; color:var(--ink-soft); margin-top:10px; }
 
   /* ---------- code source callout ---------- */
@@ -409,9 +410,9 @@
       <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
       <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
 
-      <figure class="result">
-        <img src="fig_halbach_field.png" alt="Field line diagram of a four-magnet Halbach array, showing dense field concentration above the array and a sparse weak field below">
-        <figcaption>FIG. 3 — Field-line pattern of a four-magnet Halbach array. The field reinforces tightly above the array; the weak return field below is large and sparse.</figcaption>
+      <figure class="result compact">
+        <img src="fig_halbach_field.png" alt="Field line diagram of a Halbach array, showing dense red-orange field concentration above the array with arrows marking each magnet's polarity, and a sparse weak field below">
+        <figcaption>FIG. 3 — Field-line pattern of a Halbach array, with arrows marking each magnet's polarity. The field reinforces tightly above the array; the weak return field below is large and sparse.</figcaption>
       </figure>
 
       <h3 id="london"><span class="term-tag"></span>The Second London Equation</h3>
