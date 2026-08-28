@@ -121,6 +121,16 @@
   .pill-btn:hover{ background:var(--accent-light); text-decoration:none; }
   .pill-btn svg{ width:14px; height:14px; }
 
+  .pill-btn.secondary{
+    background:none;
+    border:1.5px solid var(--accent);
+    color:var(--accent);
+  }
+  .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); }
+
+  .header-jump-btns{ display:flex; gap:8px; }
+  @media (max-width:980px){ .header-jump-btns{ display:none; } }
+
   /* ---------- layout shell ---------- */
   .shell{
     display:flex;
@@ -192,6 +202,8 @@
   .hero-figure{ max-width:var(--content-w); margin:8px 0 8px; }
   .hero-figure svg{ width:100%; height:auto; display:block; }
   .hero-figure figcaption{ font-size:12.5px; color:var(--ink-faint); margin-top:10px; font-family:'JetBrains Mono', monospace; }
+  .hero-figure img{ border-radius:8px; display:block; }
+  .hero-figure.slim img{ max-height:230px; width:100%; object-fit:cover; object-position:center 38%; display:block; }
 
   /* ---------- field-line divider ---------- */
   .field-divider{ max-width:var(--content-w); margin:52px 0; opacity:0.55; }
@@ -310,10 +322,10 @@
     <button class="icon-btn" id="navToggle" aria-label="Toggle contents" style="display:none">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a href="index.html" class="pill-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
-      Portfolio
-    </a>
+    <div class="header-jump-btns">
+      <a href="#modeling-top" class="pill-btn secondary">Mathematical Modeling</a>
+      <a href="#matlab-top" class="pill-btn">MATLAB Extension</a>
+    </div>
   </div>
 </header>
 
@@ -352,13 +364,22 @@
       </li>
       <li><a href="#results">Results</a></li>
       <li><a href="#discussion">Discussion &amp; Application</a></li>
+      <li><a href="#matlab-top">MATLAB Extension</a>
+        <ol class="sub">
+          <li><a href="#ml-plant">The Linearized Plant</a></li>
+          <li><a href="#ml-bode">Bode Plot &amp; Margins</a></li>
+          <li><a href="#ml-controller">Controller Design</a></li>
+          <li><a href="#ml-results">Results</a></li>
+          <li><a href="#ml-conclusion">Conclusion</a></li>
+        </ol>
+      </li>
       <li><a href="#links">Links</a></li>
     </ol>
   </nav>
 
   <main>
 
-    <div class="hero">
+    <div class="hero" id="modeling-top">
       <div class="eyebrow">Extended Essay — Mathematics · High School</div>
       <h1>Modeling the <span class="hl">Meissner Effect</span> with Differential Equations</h1>
       <p class="rq">Research Question: How can differential equations be used to model and evaluate magnetic levitation in EDS Maglev trains?</p>
@@ -369,8 +390,8 @@
       </div>
     </div>
 
-    <figure class="hero-figure">
-      <img src="maglev_train.jpg" alt="The Japanese L0 series SCMaglev train, the electrodynamic suspension maglev this model is based on" style="width:100%; border-radius:8px; display:block;">
+    <figure class="hero-figure slim">
+      <img src="maglev_train.jpg" alt="The Japanese L0 series SCMaglev train, the electrodynamic suspension maglev this model is based on">
       <figcaption>FIG. 0 — The JR‑Central L0 series SCMaglev, the EDS train this model is based on.</figcaption>
     </figure>
 
@@ -558,6 +579,82 @@
         <li><strong>Load limit:</strong> higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg — with the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</li>
       </ol>
     </section>
+
+    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
+
+    <section class="block" id="matlab-top">
+      <span class="eyebrow-num">09 — EXTENSION</span>
+      <h2>MATLAB Extension: A Controller for Reducing Disturbances</h2>
+      <p>The essay above models the <em>open-loop</em> physics of levitation — what force exists at a given height and speed. It never asks what happens once the train is disturbed while cruising, or whether that disturbance settles down or rings forever. This extension answers that directly: using MATLAB to linearize the levitation force, analyze its stability, and design a feedback controller — closing the loop the original model left open.</p>
+      <p>It also resolves a specific limitation the essay itself found. Section 4.4 showed that a heavier load permanently lowers the levitation height, with no way to correct it. The controller built here fixes exactly that, using integral feedback to drive that steady-state error back to zero.</p>
+
+      <h3 id="ml-plant"><span class="term-tag"></span>The Linearized Plant</h3>
+      <p>Starting from the essay's own $F_{Repulsion}(z,v)$, the force is linearized around the train's real equilibrium height and cruise speed, giving a simple spring-like equation. The essay's own equations contain no damping term at all — real EDS systems do (vertical eddy-current damping), so a literature-sourced value was added: an intrinsic decay time of 4.5 seconds, from D. Rote, <em>Passive Damping in Repulsive-Force-Based Maglev Systems</em>, Argonne National Laboratory Report ANL/ES/RP-106247 (2001). Every derived quantity — equilibrium height, stiffness, natural frequency — is computed directly from the essay's own constants inside the MATLAB script itself, and cross-checked two independent ways: a numerical finite-difference and a symbolic Taylor expansion. The resulting differential equation is converted into a transfer function through a symbolically-verified Laplace transform, not asserted by hand.</p>
+      <figure class="result">
+        <img src="fig_open_loop_step.png" alt="Open-loop step response of the linearized maglev plant to a 1 Newton disturbance force, oscillating and slowly decaying toward a steady-state value over 25 seconds">
+        <figcaption>FIG. 5 — Open-loop response to a 1N step disturbance. The oscillation rings at the plant's 2.5 Hz natural frequency, decaying slowly toward its steady-state deflection — consistent with the weak, literature-sourced intrinsic damping (4.5s decay time).</figcaption>
+      </figure>
+
+      <h3 id="ml-bode"><span class="term-tag"></span>Bode Plot &amp; Stability Margins</h3>
+      <figure class="result">
+        <img src="fig_bode.png" alt="Open-loop Bode plot of the maglev plant, showing a sharp resonance peak at 2.5 Hz and phase dropping through -90 degrees at the same frequency">
+        <figcaption>FIG. 6 — Open-loop Bode plot. The resonance peak lands exactly at 2.5 Hz, matching the natural frequency computed from the plant's poles.</figcaption>
+      </figure>
+      <p>The open-loop gain and phase margins come back infinite — not a bug, but a real finding, confirmed directly in the plot's own title (Gm = Inf, Pm = Inf). The plant is so stiff that its gain never approaches unity at any frequency, so there's no crossover point to measure a margin against. The one thing the plot does show clearly is the resonance itself, visible as the sharp spike at 2.5 Hz.</p>
+
+      <h3 id="ml-controller"><span class="term-tag"></span>Controller Design</h3>
+      <p>Two independent PID designs were built and cross-checked against each other:</p>
+      <ul>
+        <li><strong>Pole placement</strong> — a fully transparent design: target closed-loop poles are chosen directly (a 0.5s decay time), and the exact gains needed to place the poles there are solved by matching characteristic-polynomial coefficients.</li>
+        <li><strong><code>pidtune()</code></strong> — MATLAB's automatic tuner, used purely as a cross-check against the hand-designed version.</li>
+      </ul>
+      <figure class="result">
+        <img src="fig_polezero.png" alt="Pole-zero map comparing the open-loop poles to the two closed-loop controller designs, showing the pole-placement design keeping the plant's oscillation frequency while pidtune eliminates oscillation entirely with three real poles">
+        <figcaption>FIG. 7 — Pole locations: open loop vs. both controller designs.</figcaption>
+      </figure>
+      <p>The two designs diverge in an interesting way. Pole placement keeps essentially the same oscillation frequency as the open-loop plant and simply adds damping — matching how real EDS dampers actually behave. <code>pidtune()</code>'s automatic design eliminates the oscillation altogether, landing on three real poles — a more aggressive philosophy, but one with no specific literature target behind its exact numbers.</p>
+    </section>
+
+    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
+
+    <section class="block" id="ml-results">
+      <span class="eyebrow-num">10 — RESULTS</span>
+      <h2>Results</h2>
+      <figure class="result">
+        <img src="fig_step_response.png" alt="Step response comparing the height deviation of the open-loop system, the pole-placement controller, and the pidtune controller, in response to a sudden 62 kilogram passenger load">
+        <figcaption>FIG. 8 — Height response to a sudden 62 kg passenger load (the same figure the essay itself used for an average person's weight, Sec 4.4).</figcaption>
+      </figure>
+      <p>The open-loop system rings for the full 6-second window, barely decaying. Both controllers settle it out — pole placement within its 0.5s target, <code>pidtune()</code> considerably faster still.</p>
+
+      <table class="constants-table">
+        <caption>Dominant-pole decay time</caption>
+        <tr><th>Design</th><th>Decay time</th></tr>
+        <tr><td class="sym">Open loop</td><td>4.500 s</td></tr>
+        <tr><td class="sym">Pole placement</td><td>0.500 s</td></tr>
+        <tr><td class="sym">pidtune</td><td>0.119 s</td></tr>
+      </table>
+
+      <table class="constants-table">
+        <caption>Steady-state height offset under the 62 kg load</caption>
+        <tr><th>Design</th><th>Offset</th></tr>
+        <tr><td class="sym">Open loop</td><td>0.00676 mm (permanent)</td></tr>
+        <tr><td class="sym">Pole placement</td><td>0 mm</td></tr>
+        <tr><td class="sym">pidtune</td><td>0 mm</td></tr>
+      </table>
+
+      <p>That last table is the direct payoff: the open loop's offset is small in absolute terms here, but it is <em>permanent</em> — exactly the mechanism behind the essay's own Section 4.4 finding that heavier loads lower the levitation height with no way to recover it. Both controllers drive that offset to exactly zero, because the integral term in each is specifically designed to eliminate steady-state error to a constant disturbance.</p>
+    </section>
+
+    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
+
+    <section class="block" id="ml-conclusion">
+      <span class="eyebrow-num">11 — CONCLUSION</span>
+      <h2>Conclusion</h2>
+      <p>The original essay showed that differential equations could model EDS levitation successfully — but a model that only describes equilibrium says nothing about what happens when that equilibrium is disturbed. This extension closes that gap: linearizing the essay's own force equation, adding a literature-grounded damping term the original derivation never included, and designing two independently-verified controllers around it.</p>
+      <p>The result is a small but complete demonstration of classical feedback control — pole placement and automatic tuning converging on different but comparably valid designs — and, more importantly, a direct fix for a real limitation the original essay identified in its own conclusion. What started as an open-loop physics model now has a closed-loop answer to the question it originally left open.</p>
+    </section>
+
+    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <footer class="links" id="links">
       <div class="source-card">
