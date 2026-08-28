@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Page not found - Senai Sorsa</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
+      colors: { accent: '#800000', 'accent-light': '#A13333' }
+    }
+  }
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif}
+h1,h2,h3{font-family:'PT Sans',sans-serif}
+</style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen flex flex-col">
+
+<header class="border-b border-zinc-900">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center">
+    <a href="index.html" class="font-display font-bold text-lg tracking-tight">
+      <span class="text-white">senai</span><span class="text-accent">sorsa</span>
+    </a>
+  </nav>
+</header>
+
+<main class="flex-1 flex items-center">
+  <div class="max-w-6xl mx-auto px-6 py-20 w-full">
+    <div class="max-w-lg">
+      <div class="w-14 h-14 mb-8 overflow-hidden">
+        <img src="favicon.svg" alt="" class="w-full h-full object-cover">
+      </div>
+      <p class="text-xs font-medium text-accent tracking-widest uppercase mb-4">404</p>
+      <h1 class="font-display font-bold text-3xl md:text-4xl text-white mb-4">Page not found.</h1>
+      <p class="text-zinc-400 leading-relaxed mb-10">
+        The page you're looking for doesn't exist, or it may have moved. Everything else on the site is reachable from the homepage.
+      </p>
+      <a href="index.html" class="inline-flex items-center border border-zinc-700 text-zinc-200 text-sm font-medium px-5 py-3 hover:border-accent hover:text-white transition-colors">
+        Back to home
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer class="border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6 py-6">
+    <p class="text-xs text-zinc-600">&copy; <span id="yr"></span> Senai Sorsa. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+
+</body>
+</html>

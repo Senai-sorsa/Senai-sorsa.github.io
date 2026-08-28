@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app()" :class="{'dark':dark}" class="scroll-smooth">
+<html lang="en" x-data="app()" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Senai Sorsa — Aerospace Engineering student at Texas A&M University, NASA SEES research alum, and robotics leader building toward a career in aerospace systems and applied research.">
+<meta name="description" content="Senai Sorsa. Aerospace Engineering student at Texas A&M University, NASA SEES research alum, building toward a career in aerospace systems and applied research.">
 <meta name="keywords" content="aerospace engineering, Texas A&M, NASA SEES, robotics, research, student portfolio">
 <meta name="author" content="Senai Sorsa">
-<meta property="og:title" content="Senai Sorsa — Aerospace Engineering Student & Researcher">
-<meta property="og:description" content="NASA SEES research alum and Aerospace Engineering student at Texas A&M, building toward a career in flight systems and applied research.">
+<meta property="og:title" content="Senai Sorsa - Aerospace Engineering Student">
+<meta property="og:description" content="NASA SEES research alum and Aerospace Engineering student at Texas A&M.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://senai-sorsa.github.io">
-<title>Senai Sorsa — Aerospace Engineering Student & Researcher</title>
+<title>Senai Sorsa - Aerospace Engineering</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,6 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
-  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
@@ -31,444 +30,181 @@ tailwind.config = {
 *,*::before,*::after{box-sizing:border-box}
 html,body{font-family:'DM Sans',sans-serif}
 h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
-body{transition:background-color .3s,color .3s}
-/* noise overlay */
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
-background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
-/* scrollbar */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#800000;border-radius:99px}
-/* reveal on scroll */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
+::-webkit-scrollbar-thumb{background:#800000}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .reveal.in{opacity:1;transform:none}
-.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
-/* nav underline animation */
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
 .nl{position:relative}
-.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:currentColor;transition:width .22s cubic-bezier(.4,0,.2,1)}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:currentColor;transition:width .18s ease}
 .nl:hover::after,.nl.on::after{width:100%}
-.nl.on{font-weight:500}
-/* shimmer button */
-.shimmer{position:relative;overflow:hidden}
-.shimmer::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:rgba(255,255,255,.18);transform:skewX(-20deg);transition:left .4s cubic-bezier(.4,0,.2,1)}
-.shimmer:hover::after{left:160%}
-/* photo frames */
-.pf{overflow:hidden;background:#d4d4d8}
-.pf img{width:100%;height:100%;object-fit:cover;display:block}
-/* card hover */
-.card-h{transition:transform .28s cubic-bezier(.4,0,.2,1),border-color .18s}
-.card-h:hover{transform:translateY(-4px)}
-/* skill tag */
-.stag{transition:border-color .18s}
+.nl.on{color:#fff}
 [x-cloak]{display:none!important}
 </style>
 </head>
-<body class="bg-white dark:bg-zinc-950 text-black dark:text-zinc-100 antialiased">
-<!-- ═══ NAV ═══ -->
-<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
-  :class="sc?'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5':''">
+<body class="bg-zinc-950 text-zinc-100 antialiased">
+
+<!-- NAV -->
+<header class="fixed inset-x-0 top-0 z-50 border-b border-zinc-900 transition-colors duration-200"
+  :class="sc?'bg-zinc-950':'bg-zinc-950/0'">
   <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
-    <a href="#hero" class="font-display font-bold text-xl tracking-tight relative z-10">
-      <span class="text-black dark:text-white">senai</span><span class="text-accent">sorsa</span>
+    <a href="#hero" class="font-display font-bold text-lg tracking-tight">
+      <span class="text-white">senai</span><span class="text-accent">sorsa</span>
     </a>
-    <ul class="hidden md:flex items-center gap-8 text-sm" role="list">
-      <li><a href="#services" class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='services'?'on !text-black dark:!text-white':''">Focus</a></li>
-      <li><a href="#work"     class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='work'?'on !text-black dark:!text-white':''">Projects</a></li>
-      <li><a href="#about"   class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='about'?'on !text-black dark:!text-white':''">About</a></li>
-      <li><a href="#reviews" class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='reviews'?'on !text-black dark:!text-white':''">Leadership</a></li>
-      <li><a href="#blog"    class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='blog'?'on !text-black dark:!text-white':''">Recognition</a></li>
-      <li><a href="#contact" class="nl text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" :class="s==='contact'?'on !text-black dark:!text-white':''">Contact</a></li>
+    <ul class="hidden md:flex items-center gap-7 text-sm" role="list">
+      <li><a href="maglev-modeling.html" class="nl text-zinc-400 hover:text-white transition-colors">MATLAB Project</a></li>
+      <li><a href="wind-turbine.html" class="nl text-zinc-400 hover:text-white transition-colors">SOLIDWORKS Project</a></li>
+      <li><a href="dermascan.html" class="nl text-zinc-400 hover:text-white transition-colors">AI Data Analysis</a></li>
+      <li><a href="#about" class="nl text-zinc-400 hover:text-white transition-colors" :class="s==='about'?'on':''">About</a></li>
+      <li><a href="#contact" class="nl text-zinc-400 hover:text-white transition-colors" :class="s==='contact'?'on':''">Contact</a></li>
     </ul>
     <div class="flex items-center gap-3">
-      <!-- dark toggle -->
-      <button @click="dark=!dark" class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors" :aria-label="dark?'Light mode':'Dark mode'">
-        <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        <svg x-show="dark"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-      </button>
-      <!-- connect -->
-      <a href="#contact" class="hidden md:inline-flex items-center gap-2 shimmer bg-accent text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-accent-light transition-colors">
-        Connect <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-      </a>
-      <!-- hamburger -->
-      <button @click="mm=!mm" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800" :aria-expanded="mm" aria-label="Toggle menu">
+      <a href="resume.pdf" class="hidden md:inline-flex items-center border border-zinc-700 text-zinc-200 text-sm font-medium px-4 py-2 hover:border-accent hover:text-white transition-colors">Resume</a>
+      <button @click="mm=!mm" class="md:hidden w-9 h-9 flex items-center justify-center border border-zinc-800" :aria-expanded="mm" aria-label="Toggle menu">
         <svg x-show="!mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <svg x-show="mm"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg x-show="mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
   </nav>
-  <!-- mobile menu -->
   <div x-show="mm" x-cloak
-    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
-    class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900">
+    x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+    class="md:hidden bg-zinc-950 border-t border-zinc-900">
     <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
-      <li><a href="#services" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Focus</a></li>
-      <li><a href="#work"     @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Projects</a></li>
-      <li><a href="#about"   @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">About</a></li>
-      <li><a href="#reviews" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Leadership</a></li>
-      <li><a href="#blog"    @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Recognition</a></li>
-      <li><a href="#contact" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Contact</a></li>
-      <li class="pt-2 border-t border-zinc-100 dark:border-zinc-900">
-        <a href="#contact" @click="mm=false" class="inline-flex shimmer bg-accent text-white font-medium text-sm px-5 py-2.5 rounded-full">Connect →</a>
+      <li><a href="maglev-modeling.html" class="block text-zinc-300 hover:text-accent transition-colors">MATLAB Project</a></li>
+      <li><a href="wind-turbine.html" class="block text-zinc-300 hover:text-accent transition-colors">SOLIDWORKS Project</a></li>
+      <li><a href="dermascan.html" class="block text-zinc-300 hover:text-accent transition-colors">AI Data Analysis</a></li>
+      <li><a href="#about" @click="mm=false" class="block text-zinc-300 hover:text-accent transition-colors">About</a></li>
+      <li><a href="#contact" @click="mm=false" class="block text-zinc-300 hover:text-accent transition-colors">Contact</a></li>
+      <li class="pt-2 border-t border-zinc-900">
+        <a href="resume.pdf" class="inline-block border border-zinc-700 text-zinc-200 text-sm font-medium px-4 py-2">Resume</a>
       </li>
     </ul>
   </div>
 </header>
+
 <main>
-<!-- ═══ HERO ═══ -->
-<section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
-  <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
-  <div class="absolute bottom-1/4 left-0 w-64 h-64 bg-zinc-200/50 dark:bg-zinc-800/30 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
-  <div class="relative z-10 max-w-6xl mx-auto px-6 py-24 w-full">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
+
+<!-- HERO (thin) -->
+<section id="hero" class="pt-28 pb-14">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-[1fr_auto] gap-10 items-center">
       <div>
-        <p class="reveal text-sm font-medium text-accent tracking-widest uppercase mb-4">Open to Research &amp; Internship Opportunities</p>
-        <h1 class="reveal d1 font-display font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-black dark:text-white mb-6">
-          Hi, I'm <span class="text-accent">Senai</span>
-        </h1>
-        <p class="reveal d2 text-lg md:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-md mb-10">
-          Aerospace Engineering student at <strong class="font-medium text-zinc-700 dark:text-zinc-300">Texas A&amp;M University</strong> and NASA SEES research alum. I build and study systems — from magnetic-levitation prototypes to AI models — grounded in rigorous math and hands-on engineering.
+        <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Aerospace Engineering, Texas A&amp;M</p>
+        <h1 class="reveal d1 font-display font-bold text-3xl md:text-4xl text-white mb-3">Hi, I'm Senai.</h1>
+        <p class="reveal d2 text-zinc-400 leading-relaxed max-w-xl">
+          I build and study systems grounded in applied math and hands-on engineering, from magnetic levitation prototypes to AI diagnostic models. NASA SEES research alum. Currently studying at Texas A&amp;M University.
         </p>
-        <div class="reveal d3 flex flex-wrap gap-4">
-          <a href="#work" class="shimmer inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black font-medium px-7 py-3.5 rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors text-sm">
-            View my projects
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </a>
-          <a href="#contact" class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium px-7 py-3.5 rounded-full hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-sm">Get in touch</a>
-        </div>
-        <div class="reveal d4 flex gap-8 mt-14 pt-8 border-t border-zinc-100 dark:border-zinc-900">
-          <div><p class="font-display font-bold text-3xl text-black dark:text-white">98.8%</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">AI model accuracy</p></div>
-          <div><p class="font-display font-bold text-3xl text-black dark:text-white">30+</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Students led</p></div>
-          <div><p class="font-display font-bold text-3xl text-black dark:text-white">100+</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Faculty presented to</p></div>
-        </div>
       </div>
-      <div class="reveal d2 flex justify-center md:justify-end">
-        <div class="relative w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
-          <div class="pf w-full h-full rounded-3xl">
-            <img src="senaiheadshot.png" alt="Senai Sorsa" loading="eager">
-          </div>
-          <div class="absolute -bottom-4 -left-4 bg-accent text-white font-display font-bold text-sm px-4 py-2.5 rounded-2xl shadow-lg">NASA SEES Alum</div>
-        </div>
+      <div class="reveal d2 w-32 h-32 md:w-36 md:h-36 shrink-0 overflow-hidden rounded-2xl justify-self-start md:justify-self-end">
+        <img src="senaiheadshot.png" alt="Senai Sorsa" class="w-full h-full object-cover" loading="eager">
       </div>
     </div>
   </div>
 </section>
-<!-- ═══ FOCUS AREAS ═══ -->
-<section id="services" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
+
+<!-- PROJECTS -->
+<section id="projects" class="py-16 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6">
-    <div class="mb-14">
-      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">What I Focus On</p>
-      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Focus Areas</h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-6">
-      <article class="reveal d1 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="w-12 h-12 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-xl mb-6 group-hover:bg-accent/10 transition-colors">
-          <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
+    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-8">Projects</p>
+
+    <div class="grid md:grid-cols-3 gap-px bg-zinc-900">
+      <article class="reveal d1 bg-zinc-950 p-6 flex flex-col">
+        <div class="w-full h-44 overflow-hidden mb-5 bg-zinc-900">
+          <img src="maglevtrain.jpg" alt="Maglev train mathematical modeling" class="w-full h-full object-cover" loading="lazy">
         </div>
-        <h3 class="font-display font-bold text-xl text-black dark:text-white mb-3">Aerospace &amp; Mechanical Design</h3>
-        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Hands-on mechanical design and prototyping — from magnetic-levitation systems to physical builds — turning theoretical physics into working hardware.</p>
+        <p class="text-xs font-medium text-accent uppercase tracking-widest mb-2">MATLAB Project</p>
+        <h3 class="font-display font-bold text-lg text-white mb-2">Maglev Levitation &amp; Control</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed mb-5 flex-1">Modeled EDS maglev levitation with differential equations, then extended it in MATLAB with a linearized plant, Bode analysis, and a PID controller.</p>
+        <a href="maglev-modeling.html" class="text-sm font-medium text-white nl inline-block w-fit">View project</a>
       </article>
-      <article class="reveal d2 card-h group bg-zinc-900 dark:bg-zinc-800 rounded-2xl p-8 border border-zinc-800 hover:border-accent">
-        <div class="w-12 h-12 flex items-center justify-center bg-zinc-800 dark:bg-zinc-700 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-          <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+
+      <article class="reveal d2 bg-zinc-950 p-6 flex flex-col">
+        <div class="w-full h-44 overflow-hidden mb-5 bg-zinc-900">
+          <img src="windturbine.jpg" alt="Frictionless wind turbine project" class="w-full h-full object-cover" loading="lazy">
         </div>
-        <h3 class="font-display font-bold text-xl text-white mb-3">Robotics &amp; Embedded Systems</h3>
-        <p class="text-sm text-zinc-400 leading-relaxed">Python and Arduino-based embedded systems for robotics, developed through founding and running a 30+ member student robotics organization.</p>
+        <p class="text-xs font-medium text-accent uppercase tracking-widest mb-2">SOLIDWORKS Project</p>
+        <h3 class="font-display font-bold text-lg text-white mb-2">Frictionless Wind Turbine</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed mb-5 flex-1">Designed and modeled a magnetic-levitation wind turbine using active magnetic bearings, then built a working prototype. Top 48 finalist, Dallas Regional Science Fair.</p>
+        <a href="wind-turbine.html" class="text-sm font-medium text-white nl inline-block w-fit">View project</a>
       </article>
-      <article class="reveal d3 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="w-12 h-12 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-xl mb-6 group-hover:bg-accent/10 transition-colors">
-          <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+
+      <article class="reveal d3 bg-zinc-950 p-6 flex flex-col">
+        <div class="w-full h-44 overflow-hidden mb-5 bg-zinc-900">
+          <img src="dermascan.jpg" alt="Skin cancer diagnostic AI model" class="w-full h-full object-cover" loading="lazy">
         </div>
-        <h3 class="font-display font-bold text-xl text-black dark:text-white mb-3">AI &amp; Data-Driven Research</h3>
-        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Machine learning and geospatial data analysis applied to real research problems — from NASA-affiliated Earth science studies to medical diagnostic modeling.</p>
+        <p class="text-xs font-medium text-accent uppercase tracking-widest mb-2">AI Data Analysis</p>
+        <h3 class="font-display font-bold text-lg text-white mb-2">Skin Cancer Diagnostic Model</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed mb-5 flex-1">Built a diagnostic model reaching 98.8% accuracy in skin cancer detection, integrated into a mobile app prototype. Qualified for the Texas State Science &amp; Engineering Fair.</p>
+        <a href="dermascan.html" class="text-sm font-medium text-white nl inline-block w-fit">View project</a>
       </article>
     </div>
   </div>
 </section>
-<!-- ═══ PROJECTS ═══ -->
-<section id="work" class="py-24">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="mb-14">
-      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Projects &amp; Research</p>
-      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Featured Projects</h2>
-    </div>
-    <div class="grid md:grid-cols-2 gap-6">
-      <article class="card-h reveal d1 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent md:row-span-2">
-        <div class="pf w-full h-64 md:h-80">
-          <img src="windturbine.jpg" alt="Frictionless Wind Turbine Project" loading="lazy">
-        </div>
-        <div class="p-7">
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="text-xs bg-red-50 dark:bg-zinc-800 text-accent border border-red-200 dark:border-zinc-700 px-3 py-1 rounded-full">Mechanical Design</span>
-            <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Prototype</span>
-            <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Science Fair</span>
-          </div>
-          <h3 class="font-display font-bold text-2xl text-black dark:text-white mb-2">Frictionless Wind Turbine Project</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-5">Devised and modeled a magnetic-levitation wind turbine using active magnetic bearings and magnetic gears to eliminate mechanical friction losses. Assembled a working prototype from the ground up and presented the research at the Dallas Regional Science Fair, advancing as a Top 48 finalist out of roughly 1,100 competitors.</p>
-          <a href="wind-turbine.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
-        </div>
-      </article>
-      <article class="card-h reveal d2 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="pf w-full h-48">
-          <img src="maglevtrain.jpg" alt="Maglev Train Mathematical Modeling" loading="lazy">
-        </div>
-        <div class="p-6">
-          <div class="flex flex-wrap gap-2 mb-3">
-            <span class="text-xs bg-red-50 dark:bg-zinc-800 text-accent border border-red-200 dark:border-zinc-700 px-3 py-1 rounded-full">Research</span>
-            <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Applied Math</span>
-          </div>
-          <h3 class="font-display font-bold text-xl text-black dark:text-white mb-1.5">Maglev Train Mathematical Modeling</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Modeled electrodynamic suspension (EDS) maglev levitation using differential equations, Fourier series, and the Lorentz and London equations. Applied Euler and RK4 numerical methods in Python to derive real-world acceleration and load-safety parameters.</p>
-          <a href="maglev-modeling.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project →</a>
-        </div>
-      </article>
-      <article class="card-h reveal d3 group rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="pf w-full h-48">
-          <img src="dermascan.jpg" alt="Skin Cancer Diagnostic AI Model — Dermascan app" loading="lazy">
-        </div>
-        <div class="p-6">
-          <div class="flex flex-wrap gap-2 mb-3">
-            <span class="text-xs bg-red-50 dark:bg-zinc-800 text-accent border border-red-200 dark:border-zinc-700 px-3 py-1 rounded-full">AI / ML</span>
-            <span class="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">Healthcare</span>
-          </div>
-          <h3 class="font-display font-bold text-xl text-black dark:text-white mb-1.5">Skin Cancer Diagnostic AI Model</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">Engineered an AI diagnostic model reaching 98.8% accuracy in skin cancer detection and integrated it into a mobile app prototype (Dermascan). Qualified for the Texas State Science &amp; Engineering Fair.</p>
-          <a href="dermascan.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-black dark:text-white nl">View Project →</a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-<!-- ═══ ABOUT ═══ -->
-<section id="about" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="grid md:grid-cols-2 gap-16 items-center">
-      <div class="reveal order-2 md:order-1">
-        <div class="pf w-full aspect-square max-w-sm mx-auto rounded-3xl">
-          <img src="senaiheadshot.png" alt="Senai Sorsa" loading="lazy">
-        </div>
-      </div>
-      <div class="order-1 md:order-2">
-        <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">About me</p>
-        <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white leading-tight mb-6">A bit about<br>who I am</h2>
-        <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">
-          I'm Senai Sorsa, a first-semester Aerospace Engineering student at Texas A&amp;M University. Over a summer as a NASA SEES intern, I researched sustainable urban development using satellite and geospatial data, co-authored work accepted to the American Geophysical Union Fall Meeting, and presented findings to more than 100 NASA and UT Austin faculty.
-        </p>
-        <p class="reveal d3 text-zinc-500 dark:text-zinc-400 leading-relaxed mb-8">
-          Outside the classroom, I founded and lead a 30+ member robotics and programming club, mentor debate delegates through YMCA Youth and Government, and build hands-on engineering projects — from a magnetic-levitation wind turbine to AI diagnostic models. I graduated from Imagine International Academy of North Texas with a STEM Endorsement Diploma and a 4.629 weighted GPA.
-        </p>
-        <div class="reveal d4">
-          <p class="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mb-3">Skills</p>
-          <div class="flex flex-wrap gap-2" role="list" aria-label="Skills">
-            <span role="listitem" class="stag text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-full hover:border-accent">Mathematical Modeling</span>
-            <span role="listitem" class="stag text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-full hover:border-accent">Data Analysis &amp; Statistics</span>
-            <span role="listitem" class="stag text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-full hover:border-accent">AI Development</span>
-            <span role="listitem" class="stag text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-full hover:border-accent">Arduino &amp; Embedded Systems</span>
-            <span role="listitem" class="stag text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-full hover:border-accent">Public Speaking</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- ═══ LEADERSHIP ═══ -->
-<section id="reviews" class="py-24">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="mb-14">
-      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Leadership</p>
-      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Leadership &amp; Involvement</h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-6">
-      <article class="reveal d1 card-h bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="w-10 h-10 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg mb-5 text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.4"/>
-            <path d="M4 19c0-3 2.5-5 5-5s5 2 5 5" stroke-linecap="round"/>
-            <path d="M14.5 19c0-2 1.6-3.6 3.5-3.6S21.5 17 21.5 19" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1">Aug 2023 – May 2026</p>
-        <h3 class="font-display font-bold text-lg text-black dark:text-white mb-1">Founder &amp; President</h3>
-        <p class="text-sm font-medium text-accent mb-4">Robotics &amp; Programming Club</p>
-        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Founded and lead a 30+ member robotics and programming organization, designing weekly curriculum in robotics, Python, and Arduino-based embedded systems, and directing an annual AI &amp; Robotics Showcase connecting 30+ student projects with science fairs and outside opportunities.</p>
-      </article>
-      <article class="reveal d2 card-h bg-zinc-900 dark:bg-zinc-800 rounded-2xl p-7 border border-zinc-800 hover:border-accent">
-        <div class="w-10 h-10 flex items-center justify-center bg-zinc-800 dark:bg-zinc-700 rounded-lg mb-5 text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.4"/>
-            <path d="M4 19c0-3 2.5-5 5-5s5 2 5 5" stroke-linecap="round"/>
-            <path d="M14.5 19c0-2 1.6-3.6 3.5-3.6S21.5 17 21.5 19" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-1">Aug 2023 – May 2026</p>
-        <h3 class="font-display font-bold text-lg text-white mb-1">Head of Room, State Affairs Forum</h3>
-        <p class="text-sm font-medium text-accent mb-4">YMCA Youth and Government</p>
-        <p class="text-sm text-zinc-400 leading-relaxed">Mentored 25+ delegates on public speaking, debate, and parliamentary procedure. Recognized as a top delegate among 1,300+ statewide participants and a 2x Outstanding Statesman Award winner.</p>
-      </article>
-      <article class="reveal d3 card-h bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
-        <div class="w-10 h-10 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg mb-5 text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.4"/>
-            <path d="M4 19c0-3 2.5-5 5-5s5 2 5 5" stroke-linecap="round"/>
-            <path d="M14.5 19c0-2 1.6-3.6 3.5-3.6S21.5 17 21.5 19" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1">May 2025 – Aug 2025</p>
-        <h3 class="font-display font-bold text-lg text-black dark:text-white mb-1">Youth Board Member &amp; Fundraising Coordinator</h3>
-        <p class="text-sm font-medium text-accent mb-4">McKinney YMCA</p>
-        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Selected as 1 of 2 youth representatives to the McKinney YMCA Board, contributing to governance and strategic planning, delivering speeches at YMCA events and civic panels, and supporting the YMCA's $400,000+ annual community fundraising campaign.</p>
-      </article>
-    </div>
-  </div>
-</section>
-<!-- ═══ HONORS & RECOGNITION ═══ -->
-<section id="blog" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="mb-14">
-      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Recognition</p>
-      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-black dark:text-white">Honors &amp; Recognition</h2>
-    </div>
-    <div class="grid sm:grid-cols-2 gap-6">
-      <article class="reveal d1 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent flex gap-4 items-start">
-        <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <h3 class="font-display font-bold text-base text-black dark:text-white mb-1">Texas Science &amp; Engineering Fair Finalist</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Top 48 out of roughly 1,100 competitors at the Dallas Regional Science &amp; Engineering Fair.</p>
-        </div>
-      </article>
-      <article class="reveal d2 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent flex gap-4 items-start">
-        <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <h3 class="font-display font-bold text-base text-black dark:text-white mb-1">National YMCA Changemaker Program</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Selected as 1 of 80 delegates nationwide out of roughly 500 applicants.</p>
-        </div>
-      </article>
-      <article class="reveal d3 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent flex gap-4 items-start">
-        <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <h3 class="font-display font-bold text-base text-black dark:text-white mb-1">2x Outstanding Statesman Award</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Recognized as the best-performing speaker in a section of 150+ delegates.</p>
-        </div>
-      </article>
-      <article class="reveal d1 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-100 dark:border-zinc-800 hover:border-accent flex gap-4 items-start">
-        <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-red-50 dark:bg-zinc-800 rounded-lg text-accent">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <h3 class="font-display font-bold text-base text-black dark:text-white mb-1">Congressman Keith Self's Youth Representative Council</h3>
-          <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Selected as 1 of 30 members of a Texas State Representative's youth council.</p>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-<!-- ═══ CONTACT ═══ -->
-<section id="contact" class="py-24">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="bg-zinc-900 dark:bg-zinc-800 rounded-3xl p-10 md:p-16 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
-      <div class="absolute bottom-0 left-0 w-40 h-40 bg-accent/10 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
-      <div class="relative z-10 grid md:grid-cols-2 gap-12 items-start">
-        <div>
-          <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Get in touch</p>
-          <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-white leading-tight mb-5">Let's<br>connect</h2>
-          <p class="reveal d2 text-zinc-400 leading-relaxed mb-8">I'm always glad to connect about aerospace research, robotics, internship opportunities, or just to talk shop about maglev trains and magnetic levitation. Reach out — I'd love to hear from you.</p>
-          <div class="reveal d3 flex flex-col gap-4">
-            <a href="mailto:senai-sorsa@tamu.edu" class="group flex items-center gap-3 text-zinc-400 hover:text-white transition-colors">
-              <span class="w-9 h-9 flex items-center justify-center bg-zinc-800 rounded-lg group-hover:bg-accent/20 transition-colors shrink-0">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              </span>
-              <span class="text-sm">senai-sorsa@tamu.edu</span>
-            </a>
-            <span class="group flex items-center gap-3 text-zinc-400">
-              <span class="w-9 h-9 flex items-center justify-center bg-zinc-800 rounded-lg shrink-0">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-6.5-7-11a7 7 0 1114 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              </span>
-              <span class="text-sm">College Station, TX</span>
-            </span>
-          </div>
-        </div>
-        <div class="reveal d2">
-          <form action="#" method="POST" novalidate>
-            <div class="flex flex-col gap-4">
-              <div class="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label for="fname" class="block text-xs font-medium text-zinc-400 mb-1.5">Name <span aria-hidden="true">*</span></label>
-                  <input type="text" id="fname" name="name" placeholder="Jane Smith" required autocomplete="name"
-                    class="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors">
-                </div>
-                <div>
-                  <label for="femail" class="block text-xs font-medium text-zinc-400 mb-1.5">Email <span aria-hidden="true">*</span></label>
-                  <input type="email" id="femail" name="email" placeholder="jane@company.com" required autocomplete="email"
-                    class="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors">
-                </div>
-              </div>
-              <div>
-                <label for="fsubject" class="block text-xs font-medium text-zinc-400 mb-1.5">Subject</label>
-                <input type="text" id="fsubject" name="subject" placeholder="Internship opportunity, research collaboration, etc."
-                  class="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors">
-              </div>
-              <div>
-                <label for="fmessage" class="block text-xs font-medium text-zinc-400 mb-1.5">Message <span aria-hidden="true">*</span></label>
-                <textarea id="fmessage" name="message" rows="4" placeholder="What would you like to talk about?" required
-                  class="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
-              </div>
-              <button type="submit" class="shimmer w-full bg-accent text-white font-display font-bold text-sm py-3.5 rounded-xl hover:bg-accent-light transition-colors">
-                Send message →
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-<footer class="border-t border-zinc-100 dark:border-zinc-900">
-  <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-sm text-zinc-400">© <span id="yr"></span> Senai Sorsa. All rights reserved. <br> Template developed by <a href="https://lbegey78.gumroad.com/" target="_blank" class="font-bold">Laurent Begey</a> • Distributed by <a href="https://themewagon.com/" target="_blank" class="font-bold">ThemeWagon</a></p>
-    <p class="text-xs text-zinc-500">Built with
-      <a href="https://tailwindcss.com" rel="noopener noreferrer" target="_blank" class="hover:text-accent transition-colors">Tailwind CSS</a>
-      &amp;
-      <a href="https://alpinejs.dev" rel="noopener noreferrer" target="_blank" class="hover:text-accent transition-colors">Alpine.js</a>
+
+<!-- ABOUT -->
+<section id="about" class="py-16 border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6 max-w-2xl">
+    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-6">About</p>
+    <p class="reveal d1 text-zinc-400 leading-relaxed mb-4">
+      I'm a first semester Aerospace Engineering student at Texas A&amp;M University. Over a summer as a NASA SEES intern, I researched sustainable urban development using satellite and geospatial data, co-authored work accepted to the American Geophysical Union Fall Meeting, and presented findings to more than 100 NASA and UT Austin faculty.
     </p>
+    <p class="reveal d2 text-zinc-400 leading-relaxed mb-8">
+      Outside the classroom, I founded and lead a 30 member robotics and programming club and mentor debate delegates through YMCA Youth and Government. I graduated from Imagine International Academy of North Texas with a STEM Endorsement Diploma and a 4.629 weighted GPA.
+    </p>
+    <div class="reveal d3 flex flex-wrap gap-2">
+      <span class="text-xs border border-zinc-800 text-zinc-400 px-3 py-1.5">Mathematical Modeling</span>
+      <span class="text-xs border border-zinc-800 text-zinc-400 px-3 py-1.5">Data Analysis &amp; Statistics</span>
+      <span class="text-xs border border-zinc-800 text-zinc-400 px-3 py-1.5">AI Development</span>
+      <span class="text-xs border border-zinc-800 text-zinc-400 px-3 py-1.5">Arduino &amp; Embedded Systems</span>
+      <span class="text-xs border border-zinc-800 text-zinc-400 px-3 py-1.5">Public Speaking</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="py-16 border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6">
+    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-6">Contact</p>
+    <h2 class="reveal d1 font-display font-bold text-2xl md:text-3xl text-white mb-6">Let's connect.</h2>
+    <p class="reveal d2 text-zinc-400 leading-relaxed max-w-lg mb-8">
+      Glad to talk about aerospace research, robotics, internship opportunities, or maglev trains. Reach out any time.
+    </p>
+    <div class="reveal d3 flex flex-col sm:flex-row gap-4 sm:gap-8">
+      <a href="mailto:senai-sorsa@tamu.edu" class="text-zinc-300 hover:text-white transition-colors text-sm">senai-sorsa@tamu.edu</a>
+      <span class="text-zinc-600 text-sm">College Station, TX</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6 py-6">
+    <p class="text-xs text-zinc-600">&copy; <span id="yr"></span> Senai Sorsa. All rights reserved.</p>
   </div>
 </footer>
+
 <script>
 function app() {
   return {
-    dark: false,
     mm: false,
     sc: false,
     s: 'hero',
     init() {
-      // dark mode
-      this.dark = localStorage.getItem('theme') === 'dark' ||
-        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      this.$watch('dark', v => localStorage.setItem('theme', v ? 'dark' : 'light'));
-      // scroll
       window.addEventListener('scroll', () => {
         this.sc = window.scrollY > 20;
         this.updateSection();
       }, { passive: true });
-      // reveal
       const io = new IntersectionObserver(entries => {
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
       }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-      // year
       document.getElementById('yr').textContent = new Date().getFullYear();
     },
     updateSection() {
-      const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 60;
-      if (atBottom) { this.s = 'contact'; return; }
-      const ids = ['contact','blog','reviews','about','work','services','hero'];
+      const ids = ['contact','about','projects','hero'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 130) { this.s = id; return; }
