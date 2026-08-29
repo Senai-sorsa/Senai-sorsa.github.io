@@ -11,6 +11,12 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://senai-sorsa.github.io">
 <title>Senai Sorsa - Aerospace Engineering</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +63,6 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
       <li><a href="wind-turbine.html" class="nl text-zinc-400 hover:text-white transition-colors">SOLIDWORKS Project</a></li>
       <li><a href="dermascan.html" class="nl text-zinc-400 hover:text-white transition-colors">AI Data Analysis</a></li>
       <li><a href="#about" class="nl text-zinc-400 hover:text-white transition-colors" :class="s==='about'?'on':''">About</a></li>
-      <li><a href="#contact" class="nl text-zinc-400 hover:text-white transition-colors" :class="s==='contact'?'on':''">Contact</a></li>
     </ul>
     <div class="flex items-center gap-3">
       <a href="resume.pdf" class="hidden md:inline-flex items-center border border-zinc-700 text-zinc-200 text-sm font-medium px-4 py-2 hover:border-accent hover:text-white transition-colors">Resume</a>
@@ -76,7 +81,6 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
       <li><a href="wind-turbine.html" class="block text-zinc-300 hover:text-accent transition-colors">SOLIDWORKS Project</a></li>
       <li><a href="dermascan.html" class="block text-zinc-300 hover:text-accent transition-colors">AI Data Analysis</a></li>
       <li><a href="#about" @click="mm=false" class="block text-zinc-300 hover:text-accent transition-colors">About</a></li>
-      <li><a href="#contact" @click="mm=false" class="block text-zinc-300 hover:text-accent transition-colors">Contact</a></li>
       <li class="pt-2 border-t border-zinc-900">
         <a href="resume.pdf" class="inline-block border border-zinc-700 text-zinc-200 text-sm font-medium px-4 py-2">Resume</a>
       </li>
@@ -86,18 +90,18 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
 
 <main>
 
-<!-- HERO (thin) -->
-<section id="hero" class="pt-28 pb-14">
+<!-- HERO -->
+<section id="hero" class="pt-36 pb-24">
   <div class="max-w-6xl mx-auto px-6">
-    <div class="grid md:grid-cols-[1fr_auto] gap-10 items-center">
+    <div class="grid md:grid-cols-[1fr_auto] gap-14 items-center">
       <div>
-        <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Aerospace Engineering, Texas A&amp;M</p>
-        <h1 class="reveal d1 font-display font-bold text-3xl md:text-4xl text-white mb-3">Hi, I'm Senai!</h1>
-        <p class="reveal d2 text-zinc-400 leading-relaxed max-w-xl">
+        <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-5">Aerospace Engineering, Texas A&amp;M</p>
+        <h1 class="reveal d1 font-display font-bold text-5xl md:text-6xl text-white mb-6">Hi, I'm Senai!</h1>
+        <p class="reveal d2 text-zinc-400 leading-relaxed max-w-xl text-lg">
           I'm an aerospace engineering student skilled in <a href="#projects" class="text-zinc-200 underline underline-offset-2 decoration-zinc-600 hover:decoration-accent hover:text-white transition-colors">mathematical modeling</a> and <a href="#projects" class="text-zinc-200 underline underline-offset-2 decoration-zinc-600 hover:decoration-accent hover:text-white transition-colors">applied research</a>. NASA SEES alum. Check out my recent work below.
         </p>
       </div>
-      <div class="reveal d2 w-32 h-32 md:w-36 md:h-36 shrink-0 overflow-hidden rounded-full justify-self-start md:justify-self-end">
+      <div class="reveal d2 w-40 h-40 md:w-48 md:h-48 shrink-0 overflow-hidden rounded-full justify-self-start md:justify-self-end">
         <img src="senaiheadshot.png" alt="Senai Sorsa" class="w-full h-full object-cover" loading="eager">
       </div>
     </div>
@@ -105,45 +109,60 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" class="py-16 border-t border-zinc-900">
+<section id="projects" class="py-24 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6">
-    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-12">Projects</p>
+    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-16">Projects</p>
 
-    <div class="flex flex-col gap-20">
+    <div class="flex flex-col gap-28">
 
-      <article class="reveal d1 grid md:grid-cols-2 gap-10 items-center">
-        <div class="relative overflow-hidden bg-zinc-900 order-1">
-          <img src="maglevtrain.jpg" alt="Maglev train mathematical modeling" class="w-full h-72 object-cover" loading="lazy">
-          <span class="absolute top-4 left-4 bg-accent text-white text-xs font-medium px-3 py-1.5">MATLAB Project</span>
+      <article class="reveal d1 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1">
+          <div class="relative overflow-hidden">
+            <img src="maglevtrain.jpg" alt="Maglev train mathematical modeling" class="w-full h-72 object-cover" loading="lazy">
+            <div class="absolute top-4 left-4">
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">MATLAB</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Project</span>
+            </div>
+          </div>
         </div>
         <div class="order-2">
-          <h3 class="font-display font-bold text-2xl text-white mb-3">Maglev Levitation &amp; Control</h3>
-          <p class="text-sm text-zinc-400 leading-relaxed mb-6">Modeled EDS maglev levitation with differential equations, then extended it in MATLAB with a linearized plant, Bode analysis, and a PID controller.</p>
-          <a href="maglev-modeling.html" class="inline-flex items-center bg-white text-zinc-950 text-sm font-medium px-5 py-3 hover:bg-zinc-200 transition-colors">Learn more</a>
+          <h3 class="font-display font-bold text-3xl text-white mb-5">Maglev Levitation &amp; Control</h3>
+          <p class="text-zinc-400 leading-relaxed mb-8">Modeled EDS maglev levitation with differential equations, then extended it in MATLAB with a linearized plant, Bode analysis, and a PID controller.</p>
+          <a href="maglev-modeling.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
         </div>
       </article>
 
-      <article class="reveal d2 grid md:grid-cols-2 gap-10 items-center">
-        <div class="relative overflow-hidden bg-zinc-900 order-1 md:order-2">
-          <img src="windturbine.jpg" alt="Frictionless wind turbine project" class="w-full h-72 object-cover" loading="lazy">
-          <span class="absolute top-4 left-4 bg-accent text-white text-xs font-medium px-3 py-1.5">SOLIDWORKS Project</span>
+      <article class="reveal d2 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1 md:order-2">
+          <div class="relative overflow-hidden">
+            <img src="windturbine.jpg" alt="Frictionless wind turbine project" class="w-full h-72 object-cover" loading="lazy">
+            <div class="absolute top-4 left-4">
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">SOLIDWORKS</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Project</span>
+            </div>
+          </div>
         </div>
         <div class="order-2 md:order-1">
-          <h3 class="font-display font-bold text-2xl text-white mb-3">Frictionless Wind Turbine</h3>
-          <p class="text-sm text-zinc-400 leading-relaxed mb-6">Designed and modeled a magnetic-levitation wind turbine using active magnetic bearings, then built a working prototype. Top 48 finalist, Dallas Regional Science Fair.</p>
-          <a href="wind-turbine.html" class="inline-flex items-center bg-white text-zinc-950 text-sm font-medium px-5 py-3 hover:bg-zinc-200 transition-colors">Learn more</a>
+          <h3 class="font-display font-bold text-3xl text-white mb-5">Frictionless Wind Turbine</h3>
+          <p class="text-zinc-400 leading-relaxed mb-8">Designed and modeled a magnetic-levitation wind turbine using active magnetic bearings, then built a working prototype. Top 48 finalist, Dallas Regional Science Fair.</p>
+          <a href="wind-turbine.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
         </div>
       </article>
 
-      <article class="reveal d3 grid md:grid-cols-2 gap-10 items-center">
-        <div class="relative overflow-hidden bg-zinc-900 order-1">
-          <img src="dermascan.jpg" alt="Skin cancer diagnostic AI model" class="w-full h-72 object-cover" loading="lazy">
-          <span class="absolute top-4 left-4 bg-accent text-white text-xs font-medium px-3 py-1.5">AI Data Analysis</span>
+      <article class="reveal d3 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1">
+          <div class="relative overflow-hidden">
+            <img src="dermascan.jpg" alt="Skin cancer diagnostic AI model" class="w-full h-72 object-cover" loading="lazy">
+            <div class="absolute top-4 left-4">
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">AI Data</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Analysis</span>
+            </div>
+          </div>
         </div>
         <div class="order-2">
-          <h3 class="font-display font-bold text-2xl text-white mb-3">Skin Cancer Diagnostic Model</h3>
-          <p class="text-sm text-zinc-400 leading-relaxed mb-6">Built a diagnostic model reaching 98.8% accuracy in skin cancer detection, integrated into a mobile app prototype. Qualified for the Texas State Science &amp; Engineering Fair.</p>
-          <a href="dermascan.html" class="inline-flex items-center bg-white text-zinc-950 text-sm font-medium px-5 py-3 hover:bg-zinc-200 transition-colors">Learn more</a>
+          <h3 class="font-display font-bold text-3xl text-white mb-5">Skin Cancer Diagnostic Model</h3>
+          <p class="text-zinc-400 leading-relaxed mb-8">Built a diagnostic model reaching 98.8% accuracy in skin cancer detection, integrated into a mobile app prototype. Qualified for the Texas State Science &amp; Engineering Fair.</p>
+          <a href="dermascan.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
         </div>
       </article>
 
@@ -152,13 +171,13 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="py-16 border-t border-zinc-900">
+<section id="about" class="py-24 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6 max-w-2xl">
-    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-6">About</p>
-    <p class="reveal d1 text-zinc-400 leading-relaxed mb-4">
+    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-8">About</p>
+    <p class="reveal d1 text-zinc-400 leading-relaxed mb-5 text-lg">
       I'm a first semester Aerospace Engineering student at Texas A&amp;M University. Over a summer as a NASA SEES intern, I researched sustainable urban development using satellite and geospatial data, co-authored work accepted to the American Geophysical Union Fall Meeting, and presented findings to more than 100 NASA and UT Austin faculty.
     </p>
-    <p class="reveal d2 text-zinc-400 leading-relaxed mb-8">
+    <p class="reveal d2 text-zinc-400 leading-relaxed mb-10 text-lg">
       Outside the classroom, I founded and lead a 30 member robotics and programming club and mentor debate delegates through YMCA Youth and Government. I graduated from Imagine International Academy of North Texas with a STEM Endorsement Diploma and a 4.629 weighted GPA.
     </p>
     <div class="reveal d3 flex flex-wrap gap-2">
@@ -171,25 +190,10 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="py-16 border-t border-zinc-900">
-  <div class="max-w-6xl mx-auto px-6">
-    <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-6">Contact</p>
-    <h2 class="reveal d1 font-display font-bold text-2xl md:text-3xl text-white mb-6">Let's connect.</h2>
-    <p class="reveal d2 text-zinc-400 leading-relaxed max-w-lg mb-8">
-      Glad to talk about aerospace research, robotics, internship opportunities, or maglev trains. Reach out any time.
-    </p>
-    <div class="reveal d3 flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <a href="mailto:senai-sorsa@tamu.edu" class="text-zinc-300 hover:text-white transition-colors text-sm">senai-sorsa@tamu.edu</a>
-      <span class="text-zinc-600 text-sm">College Station, TX</span>
-    </div>
-  </div>
-</section>
-
 </main>
 
 <footer class="border-t border-zinc-900">
-  <div class="max-w-6xl mx-auto px-6 py-8 grid md:grid-cols-3 gap-4 items-center text-center md:text-left">
+  <div class="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-4 items-center text-center md:text-left">
     <p class="text-xs text-zinc-600">&copy; <span id="yr"></span> Senai Sorsa. All rights reserved.</p>
     <p class="text-xs text-zinc-500 text-center">Senai Sorsa, <strong class="text-zinc-300 font-medium">Aerospace Engineering Student</strong></p>
     <div class="flex items-center justify-center md:justify-end gap-4">
@@ -219,7 +223,7 @@ function app() {
       document.getElementById('yr').textContent = new Date().getFullYear();
     },
     updateSection() {
-      const ids = ['contact','about','projects','hero'];
+      const ids = ['about','projects','hero'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 130) { this.s = id; return; }
