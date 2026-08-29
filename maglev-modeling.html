@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -117,7 +113,7 @@
   .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); }
 
   /* ---------- page intro (overview + part navigation) ---------- */
-  .page-intro{ max-width:var(--content-w); padding:56px 0 20px; }
+  .page-intro{ max-width:var(--content-w); padding:56px 0 44px; }
   .page-intro .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
   .page-intro h1{ font-size:36px; line-height:1.14; font-weight:700; margin:0 0 18px; letter-spacing:-0.01em; }
   .page-intro h1 .hl{ color:var(--accent); }
@@ -132,7 +128,7 @@
     font-family:'JetBrains Mono', monospace;
     font-size:12.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
     color:var(--accent);
-    margin:20px 0 -8px;
+    margin:64px 0 -8px;
     padding-bottom:16px;
     border-bottom:2px solid var(--accent);
   }
@@ -448,7 +444,7 @@
       <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
       <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
 
-      <figure class="result compact">
+      <figure class="result">
         <img src="fig_halbach_field.png" alt="Field line diagram of a Halbach array, showing dense red-orange field concentration above the array with arrows marking each magnet's polarity, and a sparse weak field below">
         <figcaption>FIG. 3. Field-line pattern of a Halbach array, with arrows marking each magnet's polarity. The field reinforces tightly above the array; the weak return field below is large and sparse.</figcaption>
       </figure>
