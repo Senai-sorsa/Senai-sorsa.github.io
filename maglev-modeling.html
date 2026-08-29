@@ -584,11 +584,6 @@
         <tr><td>4</td><td>50.265</td><td>0.002</td><td>0.05</td></tr>
         <tr><td>5</td><td>62.832</td><td>0.001</td><td>0.0245</td></tr>
       </table>
-
-      <div class="note">
-        <span class="note-label">Implementation Note</span>
-        Motor resistance ($R_m$) appears in the derivation but wasn't recorded in the original appendix, so it's solved jointly with $k$ in the section below rather than looked up.
-      </div>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -607,9 +602,14 @@
       <div class="eq">$$9.807(362{,}874) = 4.6566\times10^4 \cdot A_{area} \implies A_{area} \approx 76.44\ m^2$$</div>
 
       <h3 id="decay"><span class="term-tag"></span>Skin-Effect Decay Rate ($n$)</h3>
-      <p>Levitation visibly starts around 30 m/s, so $v_0 = 30$, solving for the penetration depth at that speed using the same zero-net-force condition gives $n \approx 1.001$ at onset, but that alone under-constrains $n$. A second condition was needed: at the train's <em>top</em> speed (168 m/s), the skin depth should have shrunk to sub-nanometer scale, essentially zero, since the London depth itself is only ~100 nm. Setting up that inequality and solving:</p>
+      <p>We used a given value for when levitation starts, $v_0 = 30\ m/s$ (observed directly from the simulation, the speed at which the train visibly lifts off), and double verified it in our equation by applying the same zero-net-force condition used earlier: at the exact speed levitation begins, the repulsion force must equal $mg$ at $z=0$. Solving this for the required penetration depth at that point gives:</p>
+      <div class="eq">$$\lambda(t) = 0.12681640511\ m$$</div>
+      <p>Since $\lambda_L^2$ is so small (on the order of $10^{-14}$) next to this, it's essentially negligible and can be dropped, leaving just the skin-effect term. Plugging $v=30\ m/s$ into that term on its own gives $0.12665147955\ m$, extremely close to the $0.12681640511\ m$ required above. Dividing one by the other:</p>
+      <div class="eq">$$1.00130220003 \approx \left(\frac{v_0}{30}\right)^n$$</div>
+      <p>Since this ratio should equal exactly $1$ if $v_0$ genuinely equals $30\ m/s$ (because $(v_0/v_0)^n=1$ for any $n$), getting a result this close to $1$ confirms that $30\ m/s$ is a good, self-consistent value for $v_0$, exactly as the essay's own onset observation assumed.</p>
+      <p>This check alone doesn't pin down $n$ though, since at $v=v_0$ the term $(v_0/v)^n$ equals $1$ regardless of what $n$ is; any $n$ passes this particular test. A second condition is needed to actually solve for $n$: at the train's top speed (168 m/s), the skin depth should have shrunk down to sub-nanometer scale, essentially disappearing entirely, since the London penetration depth itself is only around 100 nm. Setting up that inequality and solving:</p>
       <div class="eq">$$10^{-9} \geq \left(\frac{5}{28}\right)^n \implies n \geq \log_{5/28}(7.896\times10^{-9}) \approx 10.83$$</div>
-      <p>So $n=11$ is the smallest integer satisfying both the onset behavior <em>and</em> the high-speed limit: a constant derived from bracketing two physical regimes rather than fit to a single data point.</p>
+      <p>Thus, $n=11$ is an acceptable integer to model the disappearance of the skin depth effect at high speed motion: the smallest whole number that satisfies both the onset behavior at $30\ m/s$ and the high-speed limit at $168\ m/s$ simultaneously.</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -619,14 +619,14 @@
       <h2>Results</h2>
 
       <h3><span class="term-tag"></span>Velocity: Euler vs. RK4</h3>
-      <p>Both methods track almost identically here, since velocity changes smoothly with no sharp local curvature for Euler's method to mishandle. The curve plateaus near 167.5 m/s within the L0's real ~4-minute spin-up window.</p>
+      <p>The model is accurate, as the velocity plateaus at the L0 maglev's max speed of 167.5 m/s (603 kph), taking 4 minutes (240 seconds) to reach the maximum, which is how long it takes an L0 to accelerate to max speed. Here it can also be seen that the RK4 method and Euler method are the same.</p>
       <figure class="result">
         <img src="fig_velocity.png" alt="Velocity of the maglev train over time, Euler vs RK4, plateauing near 167.5 m/s">
         <figcaption>FIG. 1. Velocity over the first 300 s. Both numerical methods agree closely.</figcaption>
       </figure>
 
       <h3><span class="term-tag"></span>Levitation Height: Euler vs. RK4</h3>
-      <p>This is the more interesting case. Euler's method uses the acceleration at a single point per step, which over-expresses the slight oscillation from the counteracting repulsion/gravity forces, visibly diverging. RK4 averages the slope across the interval, canceling the oscillation out and settling smoothly at ≈0.1 m, matching the real L0's levitation gap.</p>
+      <p>Here, Euler's method shows oscillation within the levitation, while RK4 smoothly predicts levitation. This is because there is extremely slight oscillation caused by the counteracting forces, and while Euler's method uses the acceleration at a single point (thus overexpressing this oscillation), RK4 is able to sum up and average out the oscillations, canceling them out, making predictions smooth.</p>
       <figure class="result">
         <img src="fig_levitation.png" alt="Levitation height over time, Euler diverging into oscillation while RK4 settles smoothly near 0.1 meters">
         <figcaption>FIG. 2. Levitation height in the first two minutes. Euler's method (left) diverges into unbounded oscillation; RK4 (right) settles cleanly.</figcaption>
@@ -642,7 +642,7 @@
       <h2>Discussion &amp; Application</h2>
       <p>The model surfaces two real safety parameters for the train:</p>
       <ol class="plain">
-        <li><strong>Voltage ramp rate:</strong> the maximum passenger-safe acceleration is ~1.0 m/s². Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</li>
+        <li><strong>Voltage ramp rate:</strong> the industry standard maximum passenger-safe acceleration is ~1.0 m/s². Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</li>
         <li><strong>Load limit:</strong> higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg. With the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</li>
       </ol>
     </section>
@@ -654,11 +654,16 @@
     <section class="block" id="matlab-top">
       <span class="eyebrow-num">10. EXTENSION</span>
       <h2>MATLAB Extension: A Controller for Reducing Disturbances</h2>
-      <p>The essay above models the <em>open-loop</em> physics of levitation: what force exists at a given height and speed. It never asks what happens once the train is disturbed while cruising, or whether that disturbance settles down or rings forever. This extension answers that directly: using MATLAB to linearize the levitation force, analyze its stability, and design a feedback controller, closing the loop the original model left open.</p>
-      <p>It also resolves a specific limitation the essay itself found. Section 4.4 showed that a heavier load permanently lowers the levitation height, with no way to correct it. The controller built here fixes exactly that, using integral feedback to drive that steady-state error back to zero.</p>
+      <p>So far I have modeled the movement and levitation of this train. However, there is a question left unanswered: what if there is a constant or sudden disturbance to the train? What if this disturbance continues constantly? What if it's something repetitive, like track joints spaced at regular intervals, evenly spaced guideway support pylons, a gust of wind hitting the train over and over as it passes a row of buildings, or a large group of passengers shifting their weight in rhythm? None of this was addressed in the essay above, since the model only describes the train sitting at equilibrium. It says nothing about whether a disturbance dies out or keeps building. Thus, I am making an extension in MATLAB to design a feedback controller that can actually answer this.</p>
+      <p>This extension also resolves a specific limitation the essay itself found. Section 4.4 showed that a heavier load permanently lowers the levitation height, with no way to correct it. The controller built here fixes exactly that, using integral feedback to drive that steady-state error back to zero.</p>
 
       <h3 id="ml-plant"><span class="term-tag"></span>The Linearized Plant</h3>
-      <p>Starting from the essay's own $F_{Repulsion}(z,v)$, the force is linearized around the train's real equilibrium height and cruise speed, giving a simple spring-like equation. The essay's own equations contain no damping term at all. Real EDS systems do (vertical eddy-current damping), so a literature-sourced value was added: an intrinsic decay time of 4.5 seconds, from D. Rote, <em>Passive Damping in Repulsive-Force-Based Maglev Systems</em>, Argonne National Laboratory Report ANL/ES/RP-106247 (2001). Every derived quantity (equilibrium height, stiffness, natural frequency) is computed directly from the essay's own constants inside the MATLAB script itself, and cross-checked two independent ways: a numerical finite-difference and a symbolic Taylor expansion. The resulting differential equation is converted into a transfer function through a symbolically-verified Laplace transform, not asserted by hand.</p>
+      <p>To simplify this model, I will first assume that we are starting at the baseline speed, not starting at $0$, but rather the speed a maglev typically already is going at (cruise speed, $v_{top}=167.5\ m/s$). With this assumption, we can use a first order Taylor series expansion to model this scenario, since both the change in $z$ (levitation height) and the change in $v$ (velocity) away from that baseline will be minor for the kind of disturbance we're interested in, a bump, a load shift, a gust, not a full re-acceleration of the train.</p>
+      <p>On top of this, from our original equation we can learn that the height oscillation has a period of around $0.4$ seconds, while the velocity takes almost $4$ minutes to change and stays nearly constant over any timescale relevant to a bump in the track. Thus, we can also drop the velocity term entirely from the expansion, since a variable that isn't changing contributes nothing to a rate-of-change equation. What's left is a single-variable Taylor expansion in $z$ alone, evaluated at the real equilibrium height and held at constant cruise speed:</p>
+      <div class="eq">$$m\ddot{\delta z} + c\dot{\delta z} + k\delta z = F_{ext}(t)$$</div>
+      <p>where $\delta z$ is the small deviation away from equilibrium, $k$ is the linearized stiffness (the negative slope of $F_{Repulsion}$ with respect to $z$ at equilibrium), and $c$ is a literature-sourced damping term, since the essay's own equations never included one (real EDS systems have vertical eddy-current damping that this simplified derivation didn't model). Finally, we can use a Laplace transformation to simplify the equation even further. Since every derivative in time becomes a power of $s$ under the transform, and the system starts at rest, this turns the differential equation into a purely algebraic one:</p>
+      <div class="eq">$$G(s) = \frac{Z(s)}{F(s)} = \frac{1}{ms^2+cs+k}$$</div>
+      <p>This is equal to the general transfer function equation for any second-order linear system, and it's worth being precise about why. A transfer function is, by definition, the ratio of a system's Laplace-transformed output to its Laplace-transformed input, assuming the system starts at rest. Any linear, constant-coefficient ODE of the form $m\ddot{y}+c\dot{y}+ky=u(t)$, regardless of what physical system it came from, a mass-spring-damper, an RLC circuit, this exact maglev, reduces to this exact same algebraic shape once transformed, because the transform doesn't care about the physical meaning of $m$, $c$, and $k$, only that they're constants multiplying $y$, $\dot y$, and $\ddot y$. That's precisely what makes the transfer function powerful for a controls engineer: once you've reduced a physical system down to this form, every classical tool built for "the general second-order system," pole locations, Bode plots, root locus, PID tuning rules, applies to it immediately, without needing to be re-derived from scratch for maglev trains specifically. The denominator, $ms^2+cs+k$, is exactly the characteristic polynomial of the original ODE; setting it to zero and solving for $s$ recovers the same natural frequencies and damping behavior you'd get by assuming a solution of the form $e^{st}$ directly on the time-domain equation, just reached through algebra instead of a differential-equation solve.</p>
       <figure class="result">
         <img src="fig_open_loop_step.png" alt="Open-loop step response of the linearized maglev plant to a 1 Newton disturbance force, oscillating and slowly decaying toward a steady-state value over 25 seconds">
         <figcaption>FIG. 5. Open-loop response to a 1N step disturbance. The oscillation rings at the plant's 2.5 Hz natural frequency, decaying slowly toward its steady-state deflection, consistent with the weak, literature-sourced intrinsic damping (4.5s decay time).</figcaption>
