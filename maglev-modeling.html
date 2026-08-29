@@ -122,7 +122,7 @@
   .page-intro .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
   .page-intro h1{ font-size:36px; line-height:1.14; font-weight:700; margin:0 0 18px; letter-spacing:-0.01em; }
   .page-intro h1 .hl{ color:var(--accent); }
-  .page-intro p{ font-size:17px; color:var(--ink-soft); max-width:1180px; }
+  .page-intro p{ font-size:17px; color:var(--ink-soft); max-width:600px; }
   .page-intro .part-btns{ display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
   .page-intro .part-btns .pill-btn{ font-size:14.5px; padding:12px 22px; }
 
@@ -274,7 +274,7 @@
   /* ---------- figures ---------- */
   figure.result{ margin:0 0 40px; }
   figure.result img{ width:100%; display:block; border:1px solid var(--rule); background:#fff; }
-  figure.result.compact{ max-width:700px; }
+  figure.result.compact{ max-width:480px; }
   figure.result figcaption{ font-size:14px; color:var(--ink-soft); margin-top:10px; }
 
   /* ---------- code source callout ---------- */
@@ -352,12 +352,18 @@
           <li><a href="#lorentz">Lorentz Force Law</a></li>
           <li><a href="#halbach">Halbach Array</a></li>
           <li><a href="#london">Second London Equation</a></li>
-          <li><a href="#penetration">London Penetration Depth</a></li>
+          <li><a href="#penetration">Applying London Equations for Eddy Currents</a></li>
+        </ol>
+      </li>
+      <li><a href="#combining-forces">Combining Forces</a>
+        <ol class="sub">
+          <li><a href="#newtons-law">Deriving for Acceleration</a></li>
         </ol>
       </li>
       <li><a href="#motor">Linear Synchronous Motor</a>
         <ol class="sub">
           <li><a href="#kirchhoff">Kirchhoff's Voltage Law</a></li>
+          <li><a href="#drag">Drag Calculations</a></li>
         </ol>
       </li>
       <li><a href="#constants">Constants</a></li>
@@ -415,8 +421,8 @@
 
     <section class="block" id="introduction">
       <span class="eyebrow-num">01. INTRODUCTION</span>
-      <p>EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, allowing them to levitate. This repulsion becomes stronger at high speeds, according to Faraday's law. This project models velocity, levitation height, and load size for a train based on the Japanese L0 series Maglev (603 kph / 167.5 m/s top speed), then uses the model to derive real-world safety parameters: maximum passenger load and safe voltage-ramp rate.</p>
-      <p>The derivation manipulates fundamental electromagnetic equations, the Fourier series and Lorentz force law, and Newton's laws, using integration and differentiation to arrive at the ODEs (ordinary differential equations) that describe the train's behavior. After identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge–Kutta (RK4)</strong> method are applied to numerically approximate these ODEs, and their accuracy is compared.</p>
+      <p>EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, and as the train moves faster, this force gets stronger (according to Faraday's law), allowing for levitation. This project models velocity, levitation height, and load size based on the Japanese L0 series Maglev (which can go a maximum of 603 kph), then uses this to derive real-world safety parameters.</p>
+      <p>In this derivation I will use and manipulate the Fourier series and Lorentz force law, and Newton's laws, using integration and differentiation to arrive at a second order ODE that models the train. Then after identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge–Kutta (RK4)</strong> will be applied and compared to approximate these ODEs.</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -426,13 +432,14 @@
       <h2>Numerical Methods</h2>
 
       <h3 id="euler"><span class="term-tag"></span>Euler's Method</h3>
-      <p><strong class="term">Euler's Method</strong> estimates the next point on a curve by taking the current value and adding the local slope times a small step:</p>
+      <p><strong class="term">Euler's method</strong> is a way of approximating ODEs by taking a starting point and using the tangent slope to estimate the next value:</p>
       <div class="eq">$$f(x_1) = f(x_0) + \frac{df}{dx_0}\Delta x$$</div>
-      <p>This is inaccurate at larger step sizes, since errors compound with each iteration.</p>
+      <p>It becomes inaccurate the higher the step size, since errors cumulate with each iteration.</p>
 
       <h3 id="rk4"><span class="term-tag"></span>Runge–Kutta (RK4)</h3>
-      <p><strong class="term">RK4</strong> incorporates the slope over the <em>whole interval</em> rather than just the starting point, using four weighted slope estimates (<code>k₁</code>–<code>k₄</code>) per step:</p>
+      <p>The <strong class="term">Runge Kutta</strong> method does almost the same thing, but uses the slope over the entire interval between these two values rather than just the starting slope, and we will be using the fourth order version (RK4) in our model:</p>
       <div class="eq">$$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$</div>
+      <p>It actually makes estimations of what the slope will be throughout the interval using $k_1$ through $k_4$, then takes a weighted average of them to step forward, which is why RK4 stays accurate at step sizes where Euler's method visibly breaks down.</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -440,13 +447,13 @@
     <section class="block" id="meissner">
       <span class="eyebrow-num">03. GOVERNING PHYSICS</span>
       <h2>The Meissner Effect &amp; Levitation Force</h2>
-      <p>EDS is a type of levitation based on the <strong class="term">Meissner effect</strong>, where a superconductor forces the magnetic field inside it to zero, creating a surface current that repels the field.</p>
+      <p>EDS is a type of levitation based on the <strong class="term">Meissner effect</strong>, where a superconductor forces the magnetic field inside it to zero, creating a surface current that repels the field. The Lorentz force law will be used to obtain this surface current.</p>
 
       <h3 id="lorentz"><span class="term-tag"></span>The Lorentz Force Law</h3>
       <div class="eq">$$F_{Repulsion} = \int J \times B(x,z)\, dV$$</div>
 
       <h3 id="halbach"><span class="term-tag"></span>The Halbach Array</h3>
-      <p>The magnets are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which concentrates the field on one side rather than splitting it evenly between both faces. This periodic field is approximated with a Fourier series:</p>
+      <p>The magnets on the train track are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which makes the magnetic field much stronger on one side. This periodic field can be approximated with a Fourier series due to having a multiple of harmonics:</p>
       <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
 
       <figure class="result">
@@ -455,32 +462,55 @@
       </figure>
 
       <h3 id="london"><span class="term-tag"></span>The Second London Equation</h3>
-      <p>The <strong class="term">second London equation</strong> relates superconducting current density to the field:</p>
+      <p>We also need to account for field decay, which can be given using the second <strong class="term">London equation</strong> (which relates superconducting current density to the field):</p>
       <div class="eq">$$\nabla \times J = -\frac{n_se^2}{m}B$$</div>
       <p>Substituting Ampère's law ($J_s = \nabla\times B/\mu_0$) in for $J$ gives:</p>
       <div class="eq">$$\nabla\times\nabla\times\frac{B}{\mu_0} = -\frac{n_se^2}{m}B$$</div>
-      <p>Applying the vector identity $\nabla\times\nabla\times F = \nabla(\nabla\cdot F) - \nabla^2F$, and using the fact that $\nabla\cdot B = 0$ for any magnetic field, the left side collapses to just $-\nabla^2B$. Substituting in the London penetration depth definition, $\lambda_L^2 = m/(\mu_0n_se^2)$, and restricting to the $z'$ direction (depth into the superconductor) turns the del operator into an ordinary second derivative:</p>
+      <p>Multiplying the permeability of free space onto both sides moves it over:</p>
+      <div class="eq">$$\nabla\times\nabla\times B = -\mu_0\frac{n_se^2}{m}B$$</div>
+      <p>We can further simplify this using the vector identity $\nabla\times\nabla\times F = \nabla(\nabla\cdot F) - \nabla^2F$, and restricting to only $z'$ (depth into the superconductor), which lets us drop our equation into an ordinary second derivative. Additionally, since $\nabla\cdot B = 0$ for any magnetic field (as magnetic field lines are always closed loops, they can never diverge from a point), this simplifies further, leaving us with:</p>
       <div class="eq">$$\frac{d^2B(z')}{dz'^2} = \frac{1}{\lambda_L^2}B(z')$$</div>
-      <p>This is a second-order linear ODE. Assuming an exponential solution $B(z') = B_0e^{rz'}$ and substituting back in gives the characteristic equation $r^2 = 1/\lambda_L^2$, so $r = \pm1/\lambda_L$. Since the field must decay, not grow, with depth, only the negative root is physical:</p>
+      <p>(substituting in the London penetration depth definition, $\lambda_L^2 = m/(\mu_0n_se^2)$, along the way.) To simplify even further, we must assume that $B(z')$ is an exponential, as magnetic field strength is often well-modeled as growing or decaying exponentially with distance. Taking $B(z') = B_0e^{rz'}$ and substituting back in gives the characteristic equation $r^2 = 1/\lambda_L^2$. Solving this further gives $r = \pm1/\lambda_L$. And clearly, since the magnetic field must decay (not grow) with depth, the equation is:</p>
       <div class="eq">$$B(z') = B_0e^{-z'/\lambda_L}$$</div>
 
-      <h3 id="penetration"><span class="term-tag"></span>From Field to Current: London Penetration Depth</h3>
-      <p>The magnetic vector potential $A$ relates to $B$ by $B(z') = dA/dz'$. Integrating the decay equation (with the constant of integration set to 0, since the field must be able to fully decay to zero) gives $A = -\lambda_LB_0e^{-z'/\lambda_L}$. Substituting this into the London current relation $J = -A/(\mu_0\lambda_L^2)$ gives the current at any depth:</p>
+      <h3 id="penetration"><span class="term-tag"></span>Applying London Equations for Eddy Currents</h3>
+      <p>To model the eddy currents, we start off by reusing a version of the second London equation:</p>
+      <div class="eq">$$J = -\frac{1}{\mu_0\lambda_L^2}A$$</div>
+      <p>Where $A$ is the magnetic vector potential. Since we've restricted ourselves to the $z'$ variable, what would normally be the del operator is just an ordinary derivative, giving us $B(z') = dA/dz'$. Integrating (with the constant of integration set to 0, since the field must be able to fully decay to zero) gives $A = -\lambda_LB_0e^{-z'/\lambda_L}$. Substituting this back into the London current relation above gives the current at any depth:</p>
       <div class="eq">$$J(z') = \frac{B_0e^{-z'/\lambda_L}}{\mu_0\lambda_L}$$</div>
       <p>Integrating this over the superconductor's depth $d_{sc}$ gives the overall surface current:</p>
       <div class="eq">$$J_{overall} = \int_0^{d_{sc}}J\,dz' = \frac{B_0}{\mu_0}\left(1 - e^{-d_{sc}/\lambda_L}\right)$$</div>
-      <p>The <strong class="term">London penetration depth</strong> $\lambda$ itself depends on train velocity: it transitions from the classic "skin effect" at low speed to the London depth at high speed:</p>
+      <p>The London penetration depth $\lambda_L$ used above is a constant, but real eddy currents depend on how fast the train is moving. At low speed, conductors instead show the classic "skin effect," where current crowds near the surface with a depth set by frequency and conductivity rather than by $\lambda_L$. To capture both regimes in one equation, I custom-built a penetration depth $\lambda(t)$ that starts at the skin-effect depth at low speed and transitions over to the true London depth as speed increases:</p>
       <div class="eq">$$\lambda(t) = \sqrt{\lambda_L^2 + \frac{\tau}{\mu\sigma\pi v(t)}\left(\frac{v_0}{v(t)}\right)^n}$$</div>
-      <p>Combining $J$ and $B$ (cross product simplifies to multiplication since the two are perpendicular), applying Parseval's theorem to collapse the Fourier integral, and factoring out the effective working area $A_{area}$ gives the final repulsion force:</p>
+      <p>The reasoning behind this form: the skin-effect term $\frac{\tau}{\mu\sigma\pi v(t)}$ dominates at low $v$, since it's large there, while the $(v_0/v(t))^n$ factor drives that same term toward zero as $v$ grows past the onset speed $v_0$, leaving just $\lambda_L^2$ under the root at high speed. The exponent $n$ controls how sharply that handoff happens, and was solved for in Section 6 using the L0's real onset and top speeds.</p>
+    </section>
+
+    <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
+
+    <section class="block" id="combining-forces">
+      <span class="eyebrow-num">04. COMBINING FORCES</span>
+      <h2>Combining Forces</h2>
+      <p>For this final equation, we must combine $J$ and $B$ into a singular equation. Since the two are perpendicular, their cross product is the same as just multiplying the values:</p>
+      <div class="eq">$$F_z = w\int_0^l J_{overall}\cdot B(x,z)\,dx$$</div>
+      <p>Substituting in $J_{overall}$ and $B(x,z) = B_0e^{-k_nz}$ (where $B_0$ is the Fourier sum from the Halbach array), we get:</p>
+      <div class="eq">$$F_z = w\int_0^l \frac{\left[\sum_n A_n\cos(k_nx)+B_n\sin(k_nx)\right]^2 e^{-2k_nz}}{\mu_0}\left(1-e^{-d/\lambda_L}\right)dx$$</div>
+      <p>Since only the Fourier series varies over $x$, everything else can be pulled out of the integral. This repeats every period $\tau$, so the integral over the full length $l$ becomes an integral over one period, scaled by $l/\tau$:</p>
+      <div class="eq">$$F_z = w\frac{\left(1-e^{-d/\lambda_L}\right)}{\mu_0}\frac{l}{\tau}\sum_n e^{-2k_nz}\int_0^\tau\left[A_n\cos(k_nx)+B_n\sin(k_nx)\right]^2dx$$</div>
+      <p>Applying Parseval's theorem to the remaining Fourier integral gives $\int_0^\tau[\ldots]^2dx = \frac{\tau}{2}\sum_n(A_n^2+B_n^2)$, which cancels the $\tau$ and collapses the equation to:</p>
+      <div class="eq">$$F_z = \frac{w\,l\left(1-e^{-d/\lambda_L}\right)}{2\mu_0}\sum_{n=1}^{N} e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
+      <p>Replacing the constant $\lambda_L$ with our velocity-dependent $\lambda(t)$ (to account for eddy currents strengthening with speed), and multiplying length and width into a single effective working area $A_{area} = wl$, gives the final repulsion force used throughout this model:</p>
       <div class="eq">$$F_{Repulsion} = \frac{\left(1-e^{-d/\lambda(t)}\right)}{2\mu_0}A_{area}\sum_{n=1}^{N}e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
-      <p>Applying <strong class="term">Newton's second law</strong> with gravity gives the levitation ODE:</p>
+
+      <h3 id="newtons-law"><span class="term-tag"></span>Deriving for Acceleration</h3>
+      <p>Now we can create the second order ODE by using <strong class="term">Newton's second law</strong>. Two forces act on the train vertically: the repulsion just derived, and gravity ($g = 9.807\,m/s^2$). Plugging both in and dividing by mass gives the levitation ODE:</p>
       <div class="eq">$$\frac{d^2z}{dt^2} = \frac{F_{Repulsion}}{m} - 9.807\,\frac{m}{s^2}$$</div>
+      <p>If $F_{Repulsion}/m \leq 9.807\,m/s^2$ for the entire period modeled, the train never actually lifts off, so $z=0$ and the acceleration is simply $d^2z/dt^2=0$. This clamp is what keeps the simulation from predicting the train sinking through the track before it reaches liftoff speed.</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="motor">
-      <span class="eyebrow-num">04. PROPULSION</span>
+      <span class="eyebrow-num">05. PROPULSION</span>
       <h2>Linear Synchronous Motor</h2>
 
       <figure class="result">
@@ -489,17 +519,36 @@
       </figure>
 
       <h3 id="kirchhoff"><span class="term-tag"></span>Kirchhoff's Voltage Law &amp; Motor Current</h3>
-      <p>The motor's forward thrust comes from the Lorentz law applied to the motor winding, $F_{motor}(t) = k_tI(t)$. Solving the motor's <strong class="term">Kirchhoff-voltage equation</strong> for current, using an integrating factor, and substituting back in gives:</p>
+      <p>This motor applies <strong class="term">Newton's second law</strong> to identify the motion caused by the related forces, giving $m\frac{dv}{dt} = F_{motor}(t) - F_{drag}(t)$. To find $F_{motor}(t)$, we start with the Lorentz law for the motor winding equation:</p>
+      <div class="eq">$$F_{motor}(t) = k_tI(t)$$</div>
+      <p>To derive the current, we use the time-domain <strong class="term">Kirchhoff-voltage law</strong>, which gives the voltage's relation to current:</p>
+      <div class="eq">$$V(t) = L_m\frac{dI}{dt} + R_mI(t) + \frac{d\psi}{dt}$$</div>
+      <p>where $\psi$ is magnetic flux. Since flux has a linear relationship with displacement, the chain rule splits $\frac{d\psi}{dt}$ into $\frac{d\psi}{dx}\frac{dx}{dt}$, and since the equation is linear, $\frac{d\psi}{dx}$ is a constant we call $k_e$. Combined with $\frac{dx}{dt} = v$, this gives $\frac{d\psi}{dt} = k_ev$, so:</p>
+      <div class="eq">$$V = L_m\frac{dI}{dt} + R_mI(t) + k_ev$$</div>
+      <p>Moving current-related terms to one side and dividing by $L_m$:</p>
+      <div class="eq">$$\frac{dI}{dt} + \frac{R_m}{L_m}I(t) = \frac{1}{L_m}(V-k_ev)$$</div>
+      <p>Multiplying both sides by $e^{\frac{R_m}{L_m}t}$ (an integrating factor) lets the left side collapse into a single derivative:</p>
+      <div class="eq">$$\frac{d}{dt}\left[I(t)e^{\frac{R_m}{L_m}t}\right] = e^{\frac{R_m}{L_m}t}\frac{1}{L_m}(V-k_ev)$$</div>
+      <p>Integrating both sides (treating $V$ and $v$ as constant, since both change far more slowly than the current does while it settles):</p>
+      <div class="eq">$$I(t)e^{\frac{R_m}{L_m}t} = \frac{1}{R_m}(V-k_ev)\left(e^{\frac{R_m}{L_m}t}-1\right)$$</div>
+      <p>Dividing the exponential term from both sides gives current as a function of time:</p>
+      <div class="eq">$$I(t) = \frac{1}{R_m}(V-k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
+      <p>Substituting this back into the motor equation gives the motor force:</p>
       <div class="eq">$$F_{motor}(t) = k_t\frac{1}{R_m}(V - k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
-      <p>Total drag combines aerodynamic drag and eddy (magnetic damping) drag:</p>
+
+      <h3 id="drag"><span class="term-tag"></span>Drag Calculations</h3>
+      <p>To calculate $F_{drag}$, we account for two types of drag: aerodynamic drag, from moving through air, and eddy drag (magnetic damping), which opposes motion in a magnetic field:</p>
+      <div class="eq">$$F_{drag} = F_{aero} + F_{eddy}$$</div>
+      <p>Aerodynamic drag is given by the standard equation $F_{aero} = \frac{1}{2}\rho C_dA_fv(t)^2$. The eddy force is proportional to velocity at lower speeds, giving $C_1v(t)$; additional drag related to the skin effect is dropped for simplification. Combining both:</p>
       <div class="eq">$$F_{drag} = C_1v(t) + \frac{1}{2}\rho C_dA_fv(t)^2$$</div>
-      <p>Modeling voltage as a smooth exponential ramp $V(t) = V_{max}(1-e^{-t/r})$ and applying Newton's second law gives the full velocity ODE, driven by $F_{motor}(t) - F_{drag}(t)$ divided by train mass $m$.</p>
+      <p>Modeling voltage as a smooth exponential ramp $V(t) = V_{max}(1-e^{-t/r})$, since real trains ramp voltage up gradually rather than switching it on instantly, and substituting $F_{motor}$ and $F_{drag}$ back into Newton's second law gives the full velocity ODE:</p>
+      <div class="eq">$$\frac{dv}{dt} = \frac{1}{m}\left[k_t\frac{1}{R_m}\Big(V_{max}(1-e^{-t/r}) - k_ev\Big)\left(1-e^{-\frac{R_m}{L_m}t}\right) - C_1v(t) - \frac{1}{2}\rho C_dA_fv(t)^2\right]$$</div>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="constants">
-      <span class="eyebrow-num">05. CONSTANTS</span>
+      <span class="eyebrow-num">06. CONSTANTS</span>
       <h2>Constants</h2>
       <p>Values pulled directly from the essay's appendix: real specs modeled on the L0 series (Chuo Shinkansen line), plus Fourier coefficients fit to a 5-harmonic Halbach array.</p>
 
@@ -545,7 +594,7 @@
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="solving">
-      <span class="eyebrow-num">06. CONSTANT FITTING</span>
+      <span class="eyebrow-num">07. CONSTANT FITTING</span>
       <h2>Solving for the Unknown Constants</h2>
       <p>Several constants in these equations ($k_t$, $A_{area}$, $v_0$, $n$) aren't published anywhere. They have to be <em>inferred</em> by forcing the model to match known real-world behavior of the L0. This was the part of the project that felt the least like "plugging into a formula" and the most like actual engineering judgment.</p>
 
@@ -566,7 +615,7 @@
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="results">
-      <span class="eyebrow-num">07. RESULTS</span>
+      <span class="eyebrow-num">08. RESULTS</span>
       <h2>Results</h2>
 
       <h3><span class="term-tag"></span>Velocity: Euler vs. RK4</h3>
@@ -589,7 +638,7 @@
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="discussion">
-      <span class="eyebrow-num">08. APPLICATION</span>
+      <span class="eyebrow-num">09. APPLICATION</span>
       <h2>Discussion &amp; Application</h2>
       <p>The model surfaces two real safety parameters for the train:</p>
       <ol class="plain">
@@ -603,7 +652,7 @@
     <div class="part-marker"><span class="n">2</span> Part Two: MATLAB Extension</div>
 
     <section class="block" id="matlab-top">
-      <span class="eyebrow-num">09. EXTENSION</span>
+      <span class="eyebrow-num">10. EXTENSION</span>
       <h2>MATLAB Extension: A Controller for Reducing Disturbances</h2>
       <p>The essay above models the <em>open-loop</em> physics of levitation: what force exists at a given height and speed. It never asks what happens once the train is disturbed while cruising, or whether that disturbance settles down or rings forever. This extension answers that directly: using MATLAB to linearize the levitation force, analyze its stability, and design a feedback controller, closing the loop the original model left open.</p>
       <p>It also resolves a specific limitation the essay itself found. Section 4.4 showed that a heavier load permanently lowers the levitation height, with no way to correct it. The controller built here fixes exactly that, using integral feedback to drive that steady-state error back to zero.</p>
@@ -638,7 +687,7 @@
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="ml-results">
-      <span class="eyebrow-num">10. RESULTS</span>
+      <span class="eyebrow-num">11. RESULTS</span>
       <h2>Results</h2>
       <figure class="result">
         <img src="fig_step_response.png" alt="Step response comparing the height deviation of the open-loop system, the pole-placement controller, and the pidtune controller, in response to a sudden 62 kilogram passenger load">
@@ -668,7 +717,7 @@
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
 
     <section class="block" id="ml-conclusion">
-      <span class="eyebrow-num">11. CONCLUSION</span>
+      <span class="eyebrow-num">12. CONCLUSION</span>
       <h2>Conclusion</h2>
       <p>The original essay showed that differential equations could model EDS levitation successfully. But a model that only describes equilibrium says nothing about what happens when that equilibrium is disturbed. This extension closes that gap: linearizing the essay's own force equation, adding a literature-grounded damping term the original derivation never included, and designing two independently-verified controllers around it.</p>
       <p>The result is a small but complete demonstration of classical feedback control: pole placement and automatic tuning converging on different but comparably valid designs, and, more importantly, a direct fix for a real limitation the original essay identified in its own conclusion. What started as an open-loop physics model now has a closed-loop answer to the question it originally left open.</p>
