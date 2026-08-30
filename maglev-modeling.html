@@ -61,7 +61,6 @@
   a{ color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset:3px; }
   a:hover{ text-decoration-color:var(--accent); }
 
-  /* ---------- top bar ---------- */
   header.topbar{
     position:fixed;
     top:0; left:0; right:0;
@@ -117,16 +116,14 @@
   }
   .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); }
 
-  /* ---------- page intro (overview + part navigation) ---------- */
   .page-intro{ max-width:var(--content-w); padding:56px 0 44px; }
   .page-intro .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
   .page-intro h1{ font-size:36px; line-height:1.14; font-weight:700; margin:0 0 18px; letter-spacing:-0.01em; }
   .page-intro h1 .hl{ color:var(--accent); }
-  .page-intro p{ font-size:17px; color:var(--ink-soft); max-width:600px; }
+  .page-intro p{ font-size:17px; color:var(--ink-soft); max-width:1180px; }
   .page-intro .part-btns{ display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
   .page-intro .part-btns .pill-btn{ font-size:14.5px; padding:12px 22px; }
 
-  /* ---------- part marker (segment divider between the two parts) ---------- */
   .part-marker{
     max-width:var(--content-w);
     display:flex; align-items:center; gap:14px;
@@ -144,7 +141,6 @@
     font-size:12px;
   }
 
-  /* ---------- layout shell ---------- */
   .shell{
     display:flex;
     max-width:1180px;
@@ -194,7 +190,6 @@
 
   main{ flex:1 1 auto; min-width:0; padding:0 40px 120px 56px; }
 
-  /* ---------- hero ---------- */
   .hero{ padding:56px 0 40px; max-width:var(--content-w); }
   .hero .eyebrow{
     font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase;
@@ -217,11 +212,9 @@
   .hero-figure img{ display:block; }
   .hero-figure.slim img{ max-height:230px; width:100%; object-fit:cover; object-position:center 38%; display:block; }
 
-  /* ---------- field-line divider ---------- */
   .field-divider{ max-width:var(--content-w); margin:52px 0; opacity:0.55; }
   .field-divider svg{ width:100%; height:28px; display:block; }
 
-  /* ---------- sections ---------- */
   section.block{
     max-width:var(--content-w);
     padding-top:8px;
@@ -243,7 +236,6 @@
   ul, ol.plain{ padding-left:22px; margin:0 0 18px; }
   li{ margin-bottom:8px; }
 
-  /* ---------- equations ---------- */
   .eq{
     background:var(--paper-raised);
     border-left:3px solid var(--accent);
@@ -253,7 +245,6 @@
   }
   .eq .katex-display{ margin:0; }
 
-  /* ---------- note callout ---------- */
   .note{
     background:var(--accent-tint);
     border-left:3px solid var(--accent);
@@ -263,7 +254,6 @@
   }
   .note-label{ font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:6px; font-weight:600; }
 
-  /* ---------- constants table ---------- */
   table.constants-table{ width:100%; border-collapse:collapse; font-size:13.5px; margin:8px 0 28px; background:var(--paper-raised); }
   table.constants-table caption{ text-align:left; font-size:12.5px; color:var(--ink-faint); margin-bottom:10px; caption-side:top; }
   table.constants-table th, table.constants-table td{ text-align:left; padding:9px 14px; border-bottom:1px solid var(--rule); }
@@ -271,13 +261,11 @@
   table.constants-table tr:last-child td{ border-bottom:none; }
   table.constants-table td.sym{ color:var(--accent); }
 
-  /* ---------- figures ---------- */
   figure.result{ margin:0 0 40px; }
   figure.result img{ width:100%; display:block; border:1px solid var(--rule); background:#fff; }
   figure.result.compact{ max-width:480px; }
   figure.result figcaption{ font-size:14px; color:var(--ink-soft); margin-top:10px; }
 
-  /* ---------- code source callout ---------- */
   .source-card{
     background:var(--panel-dark); color:var(--panel-dark-ink);
     padding:24px 26px; margin:8px 0 28px;
@@ -292,13 +280,11 @@
   }
   .source-card a.btn:hover{ background:#fff; }
 
-  /* ---------- footer / links ---------- */
   footer.links{ max-width:var(--content-w); margin-top:60px; padding-top:32px; border-top:1px solid var(--rule); }
   footer.links ul{ list-style:none; padding:0; margin:0; }
   footer.links li{ margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:14.5px; }
   footer.links .arrow{ color:var(--accent); margin-right:8px; }
 
-  /* ---------- mobile nav ---------- */
   @media (max-width: 920px){
     nav.toc{
       position:fixed;
@@ -344,7 +330,7 @@
       <li><a href="#numerical-methods">Numerical Methods</a>
         <ol class="sub">
           <li><a href="#euler">Euler's Method</a></li>
-          <li><a href="#rk4">Runge–Kutta (RK4)</a></li>
+          <li><a href="#rk4">Runge&ndash;Kutta (RK4)</a></li>
         </ol>
       </li>
       <li><a href="#meissner">Meissner Effect &amp; Levitation Force</a>
@@ -396,33 +382,33 @@
       <h1>Modeling &amp; Controlling a <span class="hl">Maglev Train</span></h1>
       <p>This project has two connected parts. First, a high school Extended Essay deriving the differential equations governing EDS maglev levitation and propulsion from first principles, using the Lorentz force law, the London equations, and a Halbach array's Fourier field. Second, a MATLAB feedback-control extension that linearizes that same physics to design and verify a PID controller, closing the loop the original essay left open.</p>
       <div class="part-btns">
-        <a href="#modeling-top" class="pill-btn secondary">Part One: Mathematical Modeling ↓</a>
-        <a href="#matlab-top" class="pill-btn">Part Two: MATLAB Extension ↓</a>
+        <a href="#modeling-top" class="pill-btn secondary">Part One: Mathematical Modeling &darr;</a>
+        <a href="#matlab-top" class="pill-btn">Part Two: MATLAB Extension &darr;</a>
       </div>
     </div>
 
     <div class="part-marker"><span class="n">1</span> Part One: Mathematical Modeling of a Maglev</div>
 
     <div class="hero" id="modeling-top">
-      <div class="eyebrow">Extended Essay · Mathematics · High School</div>
+      <div class="eyebrow">Extended Essay &middot; Mathematics &middot; High School</div>
       <h1>Modeling the <span class="hl">Meissner Effect</span> with Differential Equations</h1>
       <p class="rq">Research Question: How can differential equations be used to model and evaluate magnetic levitation in EDS Maglev trains?</p>
       <div class="meta">
         <span>Subject: Mathematical Modeling</span>
-        <span>·</span>
+        <span>&middot;</span>
         <span>Reference: JR-Central L0 Series</span>
       </div>
     </div>
 
     <figure class="hero-figure slim">
       <img src="maglev_train.jpg" alt="The Japanese L0 series SCMaglev train, the electrodynamic suspension maglev this model is based on">
-      <figcaption>FIG. 0. The JR‑Central L0 series SCMaglev, the EDS train this model is based on.</figcaption>
+      <figcaption>FIG. 0. The JR-Central L0 series SCMaglev, the EDS train this model is based on.</figcaption>
     </figure>
 
     <section class="block" id="introduction">
       <span class="eyebrow-num">01. INTRODUCTION</span>
       <p>EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, and as the train moves faster, this force gets stronger (according to Faraday's law), allowing for levitation. This project models velocity, levitation height, and load size based on the Japanese L0 series Maglev (which can go a maximum of 603 kph), then uses this to derive real-world safety parameters.</p>
-      <p>In this derivation I will use and manipulate the Fourier series and Lorentz force law, and Newton's laws, using integration and differentiation to arrive at a second order ODE that models the train. Then after identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge–Kutta (RK4)</strong> will be applied and compared to approximate these ODEs.</p>
+      <p>In this derivation I will use and manipulate the Fourier series and Lorentz force law, and Newton's laws, using integration and differentiation to arrive at a second order ODE that models the train. Then after identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge&ndash;Kutta (RK4)</strong> will be applied and compared to approximate these ODEs.</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -436,7 +422,7 @@
       <div class="eq">$$f(x_1) = f(x_0) + \frac{df}{dx_0}\Delta x$$</div>
       <p>It becomes inaccurate the higher the step size, since errors cumulate with each iteration.</p>
 
-      <h3 id="rk4"><span class="term-tag"></span>Runge–Kutta (RK4)</h3>
+      <h3 id="rk4"><span class="term-tag"></span>Runge&ndash;Kutta (RK4)</h3>
       <p>The <strong class="term">Runge Kutta</strong> method does almost the same thing, but uses the slope over the entire interval between these two values rather than just the starting slope, and we will be using the fourth order version (RK4) in our model:</p>
       <div class="eq">$$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$</div>
       <p>It actually makes estimations of what the slope will be throughout the interval using $k_1$ through $k_4$, then takes a weighted average of them to step forward, which is why RK4 stays accurate at step sizes where Euler's method visibly breaks down.</p>
@@ -464,7 +450,7 @@
       <h3 id="london"><span class="term-tag"></span>The Second London Equation</h3>
       <p>We also need to account for field decay, which can be given using the second <strong class="term">London equation</strong> (which relates superconducting current density to the field):</p>
       <div class="eq">$$\nabla \times J = -\frac{n_se^2}{m}B$$</div>
-      <p>Substituting Ampère's law ($J_s = \nabla\times B/\mu_0$) in for $J$ gives:</p>
+      <p>Substituting Amp&egrave;re's law ($J_s = \nabla\times B/\mu_0$) in for $J$ gives:</p>
       <div class="eq">$$\nabla\times\nabla\times\frac{B}{\mu_0} = -\frac{n_se^2}{m}B$$</div>
       <p>Multiplying the permeability of free space onto both sides moves it over:</p>
       <div class="eq">$$\nabla\times\nabla\times B = -\mu_0\frac{n_se^2}{m}B$$</div>
@@ -557,8 +543,8 @@
         <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
         <tr><td class="sym">m</td><td>Train mass</td><td>362,874 kg</td></tr>
         <tr><td class="sym">L<sub>m</sub></td><td>Motor phase inductance</td><td>3.3 H</td></tr>
-        <tr><td class="sym">ρ</td><td>Air density</td><td>1.225 kg/m³</td></tr>
-        <tr><td class="sym">A<sub>f</sub></td><td>Frontal area</td><td>8.9 m²</td></tr>
+        <tr><td class="sym">&rho;</td><td>Air density</td><td>1.225 kg/m&sup3;</td></tr>
+        <tr><td class="sym">A<sub>f</sub></td><td>Frontal area</td><td>8.9 m&sup2;</td></tr>
         <tr><td class="sym">C<sub>d</sub></td><td>Drag coefficient</td><td>0.25</td></tr>
         <tr><td class="sym">C<sub>1</sub></td><td>Eddy drag coefficient</td><td>29 N</td></tr>
         <tr><td class="sym">V<sub>max</sub></td><td>Maximum drive voltage</td><td>20,000 V</td></tr>
@@ -568,11 +554,11 @@
         <caption>Table 2. Levitation model</caption>
         <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
         <tr><td class="sym">d</td><td>Superconductor depth</td><td>0.01 m</td></tr>
-        <tr><td class="sym">τ</td><td>Halbach array period length</td><td>0.5 m</td></tr>
-        <tr><td class="sym">μ₀</td><td>Permeability of free space</td><td>4π × 10⁻⁷ H/m</td></tr>
-        <tr><td class="sym">σ</td><td>Conductivity of material</td><td>10⁵ S/m</td></tr>
-        <tr><td class="sym">λ<sub>L</sub></td><td>London penetration depth</td><td>1 × 10⁻⁷ m</td></tr>
-        <tr><td class="sym">v₀</td><td>Eddy-current onset speed</td><td>30 m/s</td></tr>
+        <tr><td class="sym">&tau;</td><td>Halbach array period length</td><td>0.5 m</td></tr>
+        <tr><td class="sym">&mu;&#8320;</td><td>Permeability of free space</td><td>4&pi; &times; 10&#8315;&#8309; H/m</td></tr>
+        <tr><td class="sym">&sigma;</td><td>Conductivity of material</td><td>10&#8309; S/m</td></tr>
+        <tr><td class="sym">&lambda;<sub>L</sub></td><td>London penetration depth</td><td>1 &times; 10&#8315;&#8309; m</td></tr>
+        <tr><td class="sym">v&#8320;</td><td>Eddy-current onset speed</td><td>30 m/s</td></tr>
       </table>
 
       <table class="constants-table">
@@ -642,7 +628,7 @@
       <h2>Discussion &amp; Application</h2>
       <p>The model surfaces two real safety parameters for the train:</p>
       <ol class="plain">
-        <li><strong>Voltage ramp rate:</strong> the industry standard maximum passenger-safe acceleration is ~1.0 m/s². Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</li>
+        <li><strong>Voltage ramp rate:</strong> the industry standard maximum passenger-safe acceleration is ~1.0 m/s&sup2;. Solving for the ramp constant $r$ that keeps acceleration under this limit gives $r \geq 85$.</li>
         <li><strong>Load limit:</strong> higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg. With the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</li>
       </ol>
     </section>
@@ -654,20 +640,24 @@
     <section class="block" id="matlab-top">
       <span class="eyebrow-num">10. EXTENSION</span>
       <h2>MATLAB Extension: A Controller for Reducing Disturbances</h2>
-      <p>So far I have modeled the movement and levitation of this train. However, there is a question left unanswered: what if there is a constant or sudden disturbance to the train? What if this disturbance continues constantly? What if it's something repetitive, like track joints spaced at regular intervals, evenly spaced guideway support pylons, a gust of wind hitting the train over and over as it passes a row of buildings, or a large group of passengers shifting their weight in rhythm? None of this was addressed in the essay above, since the model only describes the train sitting at equilibrium. It says nothing about whether a disturbance dies out or keeps building. Thus, I am making an extension in MATLAB to design a feedback controller that can actually answer this.</p>
-      <p>This extension also resolves a specific limitation the essay itself found. Section 4.4 showed that a heavier load permanently lowers the levitation height, with no way to correct it. The controller built here fixes exactly that, using integral feedback to drive that steady-state error back to zero.</p>
+      <p>So far I have modeled the movement and levitation of this train. However, there is a question left unanswered: what continuous disturbance to the train? What if this disturbance continues constantly? What if it's something repetitive, like track joints spaced at regular intervals or evenly spaced guideway supports? Could the train lose control? Thus, I am making an extension in MATLAB to design a feedback controller that can actually answer this.</p>
 
       <h3 id="ml-plant"><span class="term-tag"></span>The Linearized Plant</h3>
-      <p>To simplify this model, I will first assume that we are starting at the baseline speed, not starting at $0$, but rather the speed a maglev typically already is going at (cruise speed, $v_{top}=167.5\ m/s$). With this assumption, we can use a first order Taylor series expansion to model this scenario, since both the change in $z$ (levitation height) and the change in $v$ (velocity) away from that baseline will be minor for the kind of disturbance we're interested in, a bump, a load shift, a gust, not a full re-acceleration of the train.</p>
-      <p>On top of this, from our original equation we can learn that the height oscillation has a period of around $0.4$ seconds, while the velocity takes almost $4$ minutes to change and stays nearly constant over any timescale relevant to a bump in the track. Thus, we can also drop the velocity term entirely from the expansion, since a variable that isn't changing contributes nothing to a rate-of-change equation. What's left is a single-variable, <em>first-order</em> Taylor expansion of $F_{Repulsion}$ in $z$ alone, evaluated at the real equilibrium height and held at constant cruise speed. It's worth being precise about what "first order" refers to here: it describes how far the Taylor expansion is carried in $z$ (linear term kept, $\delta z^2$ and beyond dropped), not the differential equation itself. Newton's second law, $m\ddot z = F_{Repulsion}(z,v)-mg$, is already second-order in time before any linearizing happens at all, since acceleration is inherently a second time-derivative; linearizing only replaces the nonlinear $F_{Repulsion}$ term on the right-hand side; it doesn't touch the $\ddot z$ on the left. So the result of this step is a first-order Taylor expansion substituted into an equation that was, and remains, second-order in time:</p>
+      <p>I'll assume the disturbance hits while cruising at $v_{top}=167.5\ m/s$, not from a standing start, so both $\delta z$ and $\delta v$ stay small. That lets me linearize $F_{Repulsion}$ with a first order Taylor expansion in both variables:</p>
+      <div class="eq">$$F_{Repulsion}(z_0+\delta z,\ v_{top}+\delta v) \approx F_{Repulsion}(z_0,v_{top}) + \frac{\partial F}{\partial z}\bigg|_{z_0,v_{top}}\delta z + \frac{\partial F}{\partial v}\bigg|_{z_0,v_{top}}\delta v$$</div>
+      <p>Height oscillates on a $0.4$s period, while velocity only moves over roughly $4$ minutes, frozen on the timescale I care about here, so I drop $\delta v$. $F_{Repulsion}(z_0,v_{top})$ is just $mg$ by definition of equilibrium, and cancels directly against the $-mg$ in Newton's second law. What's left is the linear restoring term, plus whatever disturbs the train from outside, a bump, a load shift, added on as $F_{ext}(t)$:</p>
+      <div class="eq">$$m\ddot{\delta z} + k\delta z = F_{ext}(t), \qquad k \equiv -\frac{\partial F}{\partial z}\bigg|_{z_0}$$</div>
+      <p>This has no damping. My force law never depends on $\dot z$, so a disturbance here would ring forever at the natural frequency and never settle. Real EDS suspensions do have vertical eddy-current damping that this derivation never modeled, so I added a literature-sourced coefficient $c$ (Rote, Argonne ANL/ES/RP-106247, 2001), giving the plant I actually use:</p>
       <div class="eq">$$m\ddot{\delta z} + c\dot{\delta z} + k\delta z = F_{ext}(t)$$</div>
-      <p>where $\delta z$ is the small deviation away from equilibrium, $k$ is the linearized stiffness (the negative slope of $F_{Repulsion}$ with respect to $z$ at equilibrium), and $c$ is a literature-sourced damping term, since the essay's own equations never included one (real EDS systems have vertical eddy-current damping that this simplified derivation didn't model). Finally, we can use a Laplace transformation to simplify the equation even further. Since every derivative in time becomes a power of $s$ under the transform, and the system starts at rest, this turns the differential equation into a purely algebraic one:</p>
-      <div class="eq">$$G(s) = \frac{Z(s)}{F(s)} = \frac{1}{ms^2+cs+k}$$</div>
-      <p>This is equal to the general transfer function equation for any second-order linear system, and it's worth being precise about why. A transfer function is, by definition, the ratio of a system's Laplace-transformed output to its Laplace-transformed input, assuming the system starts at rest. Any linear, constant-coefficient ODE of the form $m\ddot{y}+c\dot{y}+ky=u(t)$, regardless of what physical system it came from, a mass-spring-damper, an RLC circuit, this exact maglev, reduces to this exact same algebraic shape once transformed, because the transform doesn't care about the physical meaning of $m$, $c$, and $k$, only that they're constants multiplying $y$, $\dot y$, and $\ddot y$. That's precisely what makes the transfer function powerful for a controls engineer: once you've reduced a physical system down to this form, every classical tool built for "the general second-order system," pole locations, Bode plots, root locus, PID tuning rules, applies to it immediately, without needing to be re-derived from scratch for maglev trains specifically. The denominator, $ms^2+cs+k$, is exactly the characteristic polynomial of the original ODE; setting it to zero and solving for $s$ recovers the same natural frequencies and damping behavior you'd get by assuming a solution of the form $e^{st}$ directly on the time-domain equation, just reached through algebra instead of a differential-equation solve.</p>
+
       <figure class="result">
         <img src="fig_open_loop_step.png" alt="Open-loop step response of the linearized maglev plant to a 1 Newton disturbance force, oscillating and slowly decaying toward a steady-state value over 25 seconds">
         <figcaption>FIG. 5. Open-loop response to a 1N step disturbance. The oscillation rings at the plant's 2.5 Hz natural frequency, decaying slowly toward its steady-state deflection, consistent with the weak, literature-sourced intrinsic damping (4.5s decay time).</figcaption>
       </figure>
+
+      <p>Laplace-transforming both sides (zero initial conditions, the train starts at rest) turns every time-derivative into a power of $s$, giving the general transfer function:</p>
+      <div class="eq">$$G(s) = \frac{Z(s)}{F(s)} = \frac{1}{ms^2+cs+k}$$</div>
+      <p>where $Z(s)$ is the Laplace transform of $\delta z(t)$ and $F(s)$ is the Laplace transform of $F_{ext}(t)$.</p>
 
       <h3 id="ml-bode"><span class="term-tag"></span>Bode Plot &amp; Stability Margins</h3>
       <figure class="result">
@@ -736,11 +726,11 @@
           <div class="label">Complete implementation</div>
           <div class="fname">maglev_model.py</div>
         </div>
-        <a class="btn" href="maglev_model.py" download>Download source →</a>
+        <a class="btn" href="maglev_model.py" download>Download source &rarr;</a>
       </div>
       <ul>
-        <li><span class="arrow">→</span><a href="meissner-effect-essay.pdf">Full Extended Essay (PDF, 48 pages)</a></li>
-        <li><span class="arrow">→</span><a href="index.html">← Back to portfolio</a></li>
+        <li><span class="arrow">&rarr;</span><a href="meissner-effect-essay.pdf">Full Extended Essay (PDF, 48 pages)</a></li>
+        <li><span class="arrow">&rarr;</span><a href="index.html">&larr; Back to portfolio</a></li>
       </ul>
     </footer>
 
