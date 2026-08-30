@@ -664,19 +664,19 @@
         <img src="fig_bode.png" alt="Open-loop Bode plot of the maglev plant, showing a sharp resonance peak at 2.5 Hz and phase dropping through -90 degrees at the same frequency">
         <figcaption>FIG. 6. Open-loop Bode plot. The resonance peak lands exactly at 2.5 Hz, matching the natural frequency computed from the plant's poles.</figcaption>
       </figure>
-      <p>The open-loop gain and phase margins come back infinite. Not a bug, but a real finding, confirmed directly in the plot's own title (Gm = Inf, Pm = Inf). The plant is so stiff that its gain never approaches unity at any frequency, so there's no crossover point to measure a margin against. The one thing the plot does show clearly is the resonance itself, visible as the sharp spike at 2.5 Hz.</p>
+      <p>Heres we can see that the open-loop gain and phase margins never reach -180 or 0 dB, implying the impact never fully gets dampened out and causes a permant change.The one thing the plot does show clearly is the resonance itself, visible as the sharp spike at 2.5 Hz.</p>
 
       <h3 id="ml-controller"><span class="term-tag"></span>Controller Design</h3>
       <p>Two independent PID designs were built and cross-checked against each other:</p>
       <ul>
-        <li><strong>Pole placement</strong>: a fully transparent design. Target closed-loop poles are chosen directly (a 0.5s decay time), and the exact gains needed to place the poles there are solved by matching characteristic-polynomial coefficients.</li>
-        <li><strong><code>pidtune()</code></strong>: MATLAB's automatic tuner, used purely as a cross-check against the hand-designed version.</li>
+        <li><strong>Pole placement</strong>: Self Built design. Target closed-loop poles are chosen directly (a 0.5s decay time), and the exact gains are solved by finding appropriate polynomial coefficients.</li>
+        <li><strong><code>pidtune()</code></strong>: MATLAB's automatic tuner, used purely as a cross-check against the hand-designed version. It doesn't account the for the real world paramenters, such as how much force can realsiticly be applied wihtout risk and with the accessible power.</li>
       </ul>
       <figure class="result">
         <img src="fig_polezero.png" alt="Pole-zero map comparing the open-loop poles to the two closed-loop controller designs, showing the pole-placement design keeping the plant's oscillation frequency while pidtune eliminates oscillation entirely with three real poles">
         <figcaption>FIG. 7. Pole locations: open loop vs. both controller designs.</figcaption>
       </figure>
-      <p>The two designs diverge in an interesting way. Pole placement keeps essentially the same oscillation frequency as the open-loop plant and simply adds damping, matching how real EDS dampers actually behave. <code>pidtune()</code>'s automatic design eliminates the oscillation altogether, landing on three real poles: a more aggressive philosophy, but one with no specific literature target behind its exact numbers.</p>
+      <p>Our sefl built design keeps essentially the same oscillation frequency as the open-loop plant and simply adds damping, matching how real EDS dampers actually behave. <code>pidtune()</code>'s automatic design eliminates the oscillation altogether. </p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -688,7 +688,7 @@
         <img src="fig_step_response.png" alt="Step response comparing the height deviation of the open-loop system, the pole-placement controller, and the pidtune controller, in response to a sudden 62 kilogram passenger load">
         <figcaption>FIG. 8. Height response to a sudden 62 kg passenger load (the same figure the essay itself used for an average person's weight, Sec 4.4).</figcaption>
       </figure>
-      <p>The open-loop system rings for the full 6-second window, barely decaying. Both controllers settle it out. Pole placement settles within its 0.5s target, <code>pidtune()</code> considerably faster still.</p>
+      <p>The open-loop system barely decays. While Pid Pole placement settles within its 1-2 seconds, missing it's target but still being considerably effective. <code>pidtune()</code> is considerably faster, but uses force that could be unrealistic in the real world/</p>
 
       <table class="constants-table">
         <caption>Dominant-pole decay time</caption>
@@ -702,11 +702,10 @@
         <caption>Steady-state height offset under the 62 kg load</caption>
         <tr><th>Design</th><th>Offset</th></tr>
         <tr><td class="sym">Open loop</td><td>0.00676 mm (permanent)</td></tr>
-        <tr><td class="sym">Pole placement</td><td>0 mm</td></tr>
-        <tr><td class="sym">pidtune</td><td>0 mm</td></tr>
+        <tr><td class="sym">Pole placement & pidtune</td><td>0 mm</td></tr>
       </table>
 
-      <p>That last table is the direct payoff: the open loop's offset is small in absolute terms here, but it is <em>permanent</em>, exactly the mechanism behind the essay's own Section 4.4 finding that heavier loads lower the levitation height with no way to recover it. Both controllers drive that offset to exactly zero, because the integral term in each is specifically designed to eliminate steady-state error to a constant disturbance.</p>
+      <p>The open loop's offset is small in absolute terms here, but it is <em>permanent</em>, while controllers eliminate this disturbance</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -714,8 +713,8 @@
     <section class="block" id="ml-conclusion">
       <span class="eyebrow-num">12. CONCLUSION</span>
       <h2>Conclusion</h2>
-      <p>The original essay showed that differential equations could model EDS levitation successfully. But a model that only describes equilibrium says nothing about what happens when that equilibrium is disturbed. This extension closes that gap: linearizing the essay's own force equation, adding a literature-grounded damping term the original derivation never included, and designing two independently-verified controllers around it.</p>
-      <p>The result is a small but complete demonstration of classical feedback control: pole placement and automatic tuning converging on different but comparably valid designs, and, more importantly, a direct fix for a real limitation the original essay identified in its own conclusion. What started as an open-loop physics model now has a closed-loop answer to the question it originally left open.</p>
+      <p>While I originally showed differential equations could model EDS levitation successfully, this new extension linearizes the force equation to design two controllers around it.</p>
+      <p>What started as an open-loop model now has allowed me create a closed-loop version, potentially solving several of the issues that Maglevs can encounter</p>
     </section>
 
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
