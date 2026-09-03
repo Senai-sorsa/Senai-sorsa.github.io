@@ -4,19 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Modeling the Meissner Effect | Senai Sorsa</title>
-
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <meta name="description" content="Deriving and numerically solving the coupled ODEs governing EDS maglev levitation and propulsion, from the Lorentz force law and London equations to Euler/RK4 comparison.">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-
 <style>
   :root{
     --paper: #09090B;
@@ -34,16 +30,13 @@
     --content-w: 700px;
     --nav-w: 250px;
   }
-
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   [id]{ scroll-margin-top: calc(var(--header-h) + 20px); }
-
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   }
-
   body{
     margin:0;
     background:var(--paper);
@@ -54,13 +47,10 @@
     -webkit-font-smoothing:antialiased;
     transition:background-color .25s ease, color .25s ease;
   }
-
   h1,h2,h3{ font-family:'PT Sans', sans-serif; }
   .eyebrow, .meta, code, .toc a, .constants-table, .note-label{ font-family:'JetBrains Mono', monospace; }
-
   a{ color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset:3px; }
   a:hover{ text-decoration-color:var(--accent); }
-
   header.topbar{
     position:fixed;
     top:0; left:0; right:0;
@@ -82,7 +72,6 @@
   }
   header.topbar .logo span{ color:var(--accent); }
   header.topbar .actions{ display:flex; align-items:center; gap:10px; }
-
   .icon-btn{
     width:38px; height:38px;
     display:flex; align-items:center; justify-content:center;
@@ -94,7 +83,6 @@
   }
   .icon-btn:hover{ background:var(--paper-raised); color:var(--ink); }
   .icon-btn svg{ width:16px; height:16px; }
-
   .pill-btn{
     display:inline-flex; align-items:center; gap:7px;
     font-family:'DM Sans', sans-serif;
@@ -108,14 +96,12 @@
   }
   .pill-btn:hover{ background:var(--accent-light); text-decoration:none; }
   .pill-btn svg{ width:14px; height:14px; }
-
   .pill-btn.secondary{
     background:none;
     border:1.5px solid var(--accent);
     color:var(--accent);
   }
   .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); }
-
   .page-intro{ max-width:var(--content-w); padding:56px 0 44px; }
   .page-intro .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
   .page-intro h1{ font-size:36px; line-height:1.14; font-weight:700; margin:0 0 18px; letter-spacing:-0.01em; }
@@ -123,7 +109,6 @@
   .page-intro p{ font-size:17px; color:var(--ink-soft); max-width:1180px; }
   .page-intro .part-btns{ display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
   .page-intro .part-btns .pill-btn{ font-size:14.5px; padding:12px 22px; }
-
   .part-marker{
     max-width:var(--content-w);
     display:flex; align-items:center; gap:14px;
@@ -140,7 +125,6 @@
     background:var(--accent); color:#fff;
     font-size:12px;
   }
-
   .shell{
     display:flex;
     max-width:1180px;
@@ -148,7 +132,6 @@
     align-items:flex-start;
     padding-top:var(--header-h);
   }
-
   nav.toc{
     position:sticky;
     top:var(--header-h);
@@ -159,7 +142,6 @@
     overflow-y:auto;
     border-right:1px solid var(--rule);
   }
-
   nav.toc .brand{
     font-size:13px;
     letter-spacing:0.06em;
@@ -167,7 +149,6 @@
     color:var(--ink-faint);
     margin-bottom:28px;
   }
-
   nav.toc ol{ list-style:none; margin:0; padding:0; font-size:13px; }
   nav.toc li{ margin-bottom:2px; }
   nav.toc a{
@@ -187,9 +168,7 @@
   }
   nav.toc .sub a{ padding-left:22px; font-size:12.5px; color:var(--ink-faint); }
   nav.toc .sub a.active, nav.toc .sub a:hover{ color:var(--accent); }
-
   main{ flex:1 1 auto; min-width:0; padding:0 40px 120px 56px; }
-
   .hero{ padding:56px 0 40px; max-width:var(--content-w); }
   .hero .eyebrow{
     font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase;
@@ -205,16 +184,13 @@
     border-left:3px solid var(--accent); padding-left:16px; margin:0 0 28px;
   }
   .hero .meta{ font-size:13px; color:var(--ink-faint); display:flex; gap:18px; flex-wrap:wrap; }
-
   .hero-figure{ max-width:var(--content-w); margin:8px 0 8px; }
   .hero-figure svg{ width:100%; height:auto; display:block; }
   .hero-figure figcaption{ font-size:12.5px; color:var(--ink-faint); margin-top:10px; font-family:'JetBrains Mono', monospace; }
   .hero-figure img{ display:block; }
   .hero-figure.slim img{ max-height:230px; width:100%; object-fit:cover; object-position:center 38%; display:block; }
-
   .field-divider{ max-width:var(--content-w); margin:52px 0; opacity:0.55; }
   .field-divider svg{ width:100%; height:28px; display:block; }
-
   section.block{
     max-width:var(--content-w);
     padding-top:8px;
@@ -223,19 +199,14 @@
     transition:opacity 0.6s ease, transform 0.6s ease;
   }
   section.block.in-view{ opacity:1; transform:translateY(0); }
-
   .eyebrow-num{ font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--accent); letter-spacing:0.08em; margin-bottom:10px; display:block; }
-
   h2{ font-size:27px; font-weight:700; margin:0 0 20px; letter-spacing:-0.005em; }
   h3{ font-size:19px; font-weight:700; margin:36px 0 14px; color:var(--ink); }
   h3 .term-tag{ display:inline-block; width:8px; height:8px; background:var(--accent); margin-right:9px; vertical-align:middle; }
-
   p{ margin:0 0 18px; }
   strong.term{ color:var(--accent); font-weight:600; }
-
   ul, ol.plain{ padding-left:22px; margin:0 0 18px; }
   li{ margin-bottom:8px; }
-
   .eq{
     background:var(--paper-raised);
     border-left:3px solid var(--accent);
@@ -244,7 +215,6 @@
     overflow-x:auto;
   }
   .eq .katex-display{ margin:0; }
-
   .note{
     background:var(--accent-tint);
     border-left:3px solid var(--accent);
@@ -253,19 +223,16 @@
     font-size:15.5px;
   }
   .note-label{ font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:6px; font-weight:600; }
-
   table.constants-table{ width:100%; border-collapse:collapse; font-size:13.5px; margin:8px 0 28px; background:var(--paper-raised); }
   table.constants-table caption{ text-align:left; font-size:12.5px; color:var(--ink-faint); margin-bottom:10px; caption-side:top; }
   table.constants-table th, table.constants-table td{ text-align:left; padding:9px 14px; border-bottom:1px solid var(--rule); }
   table.constants-table th{ color:var(--ink-faint); font-weight:500; text-transform:uppercase; font-size:11px; letter-spacing:0.04em; }
   table.constants-table tr:last-child td{ border-bottom:none; }
   table.constants-table td.sym{ color:var(--accent); }
-
   figure.result{ margin:0 0 40px; }
   figure.result img{ width:100%; display:block; border:1px solid var(--rule); background:#fff; }
   figure.result.compact{ max-width:480px; }
   figure.result figcaption{ font-size:14px; color:var(--ink-soft); margin-top:10px; }
-
   .source-card{
     background:var(--panel-dark); color:var(--panel-dark-ink);
     padding:24px 26px; margin:8px 0 28px;
@@ -279,12 +246,10 @@
     transition:background 0.15s ease;
   }
   .source-card a.btn:hover{ background:#fff; }
-
   footer.links{ max-width:var(--content-w); margin-top:60px; padding-top:32px; border-top:1px solid var(--rule); }
   footer.links ul{ list-style:none; padding:0; margin:0; }
   footer.links li{ margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:14.5px; }
   footer.links .arrow{ color:var(--accent); margin-right:8px; }
-
   @media (max-width: 920px){
     nav.toc{
       position:fixed;
@@ -307,7 +272,6 @@
 </style>
 </head>
 <body>
-
 <header class="topbar">
   <a href="index.html" class="logo">senai<span>sorsa</span></a>
   <div class="actions">
@@ -320,9 +284,7 @@
     </a>
   </div>
 </header>
-
 <div class="shell">
-
   <nav class="toc" id="toc">
     <div class="brand">Contents</div>
     <ol>
@@ -374,21 +336,17 @@
       <li><a href="#links">Links</a></li>
     </ol>
   </nav>
-
   <main>
-
     <div class="page-intro" id="page-top">
       <div class="eyebrow">Research Project</div>
       <h1>Modeling &amp; Controlling a <span class="hl">Maglev Train</span></h1>
-      <p>This project has two connected parts. First, a high school Extended Essay deriving the differential equations governing EDS maglev levitation and propulsion from first principles, using the Lorentz force law, the London equations, and a Halbach array's Fourier field. Second, a MATLAB feedback-control extension that linearizes that same physics to design and verify a PID controller, closing the loop the original essay left open.</p>
+      <p>This project has two connected parts. First deriving differential equations to model EDS maglev levitation and propulsion, using the Lorentz force law, the London equations, and a Fourier analysis. Second, a MATLAB feedback-control model that linearizes the EDS model, to provide a control system for any destabilizing force that acts on the maglev.</p>
       <div class="part-btns">
         <a href="#modeling-top" class="pill-btn secondary">Part One: Mathematical Modeling &darr;</a>
         <a href="#matlab-top" class="pill-btn">Part Two: MATLAB Extension &darr;</a>
       </div>
     </div>
-
     <div class="part-marker"><span class="n">1</span> Part One: Mathematical Modeling of a Maglev</div>
-
     <div class="hero" id="modeling-top">
       <div class="eyebrow">Extended Essay &middot; Mathematics &middot; High School</div>
       <h1>Modeling the <span class="hl">Meissner Effect</span> with Differential Equations</h1>
@@ -399,54 +357,42 @@
         <span>Reference: JR-Central L0 Series</span>
       </div>
     </div>
-
     <figure class="hero-figure slim">
       <img src="maglev_train.jpg" alt="The Japanese L0 series SCMaglev train, the electrodynamic suspension maglev this model is based on">
       <figcaption>FIG. 0. The JR-Central L0 series SCMaglev, the EDS train this model is based on.</figcaption>
     </figure>
-
     <section class="block" id="introduction">
       <span class="eyebrow-num">01. INTRODUCTION</span>
       <p>EDS (electrodynamic suspension) maglev trains use superconductive magnets to repel a magnetic track, and as the train moves faster, this force gets stronger (according to Faraday's law), allowing for levitation. This project models velocity, levitation height, and load size based on the Japanese L0 series Maglev (which can go a maximum of 603 kph), then uses this to derive real-world safety parameters.</p>
       <p>In this derivation I will use and manipulate the Fourier series and Lorentz force law, and Newton's laws, using integration and differentiation to arrive at a second order ODE that models the train. Then after identifying key constants, <strong class="term">Euler's Method</strong> and the <strong class="term">Runge&ndash;Kutta (RK4)</strong> will be applied and compared to approximate these ODEs.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="numerical-methods">
       <span class="eyebrow-num">02. NUMERICAL METHODS</span>
       <h2>Numerical Methods</h2>
-
       <h3 id="euler"><span class="term-tag"></span>Euler's Method</h3>
       <p><strong class="term">Euler's method</strong> is a way of approximating ODEs by taking a starting point and using the tangent slope to estimate the next value:</p>
       <div class="eq">$$f(x_1) = f(x_0) + \frac{df}{dx_0}\Delta x$$</div>
       <p>It becomes inaccurate the higher the step size, since errors cumulate with each iteration.</p>
-
       <h3 id="rk4"><span class="term-tag"></span>Runge&ndash;Kutta (RK4)</h3>
       <p>The <strong class="term">Runge Kutta</strong> method does almost the same thing, but uses the slope over the entire interval between these two values rather than just the starting slope, and we will be using the fourth order version (RK4) in our model:</p>
       <div class="eq">$$y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$</div>
       <p>It actually makes estimations of what the slope will be throughout the interval using $k_1$ through $k_4$, then takes a weighted average of them to step forward, which is why RK4 stays accurate at step sizes where Euler's method visibly breaks down.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="meissner">
       <span class="eyebrow-num">03. GOVERNING PHYSICS</span>
       <h2>The Meissner Effect &amp; Levitation Force</h2>
       <p>EDS is a type of levitation based on the <strong class="term">Meissner effect</strong>, where a superconductor forces the magnetic field inside it to zero, creating a surface current that repels the field. The Lorentz force law will be used to obtain this surface current.</p>
-
       <h3 id="lorentz"><span class="term-tag"></span>The Lorentz Force Law</h3>
       <div class="eq">$$F_{Repulsion} = \int J \times B(x,z)\, dV$$</div>
-
       <h3 id="halbach"><span class="term-tag"></span>The Halbach Array</h3>
       <p>The magnets on the train track are arranged in a <strong class="term">Halbach array</strong> (Fig. 3, below), which makes the magnetic field much stronger on one side. This periodic field can be approximated with a Fourier series due to having a multiple of harmonics:</p>
       <div class="eq">$$B(x,z) = \sum_{n=1}^{N} \big[A_n\cos(k_nx) + B_n\sin(k_nx)\big]e^{-k_nz}$$</div>
-
       <figure class="result">
         <img src="fig_halbach_field.png" alt="Field line diagram of a Halbach array, showing dense red-orange field concentration above the array with arrows marking each magnet's polarity, and a sparse weak field below">
         <figcaption>FIG. 3. Field-line pattern of a Halbach array, with arrows marking each magnet's polarity. The field reinforces tightly above the array; the weak return field below is large and sparse.</figcaption>
       </figure>
-
       <h3 id="london"><span class="term-tag"></span>The Second London Equation</h3>
       <p>We also need to account for field decay, which can be given using the second <strong class="term">London equation</strong> (which relates superconducting current density to the field):</p>
       <div class="eq">$$\nabla \times J = -\frac{n_se^2}{m}B$$</div>
@@ -458,7 +404,6 @@
       <div class="eq">$$\frac{d^2B(z')}{dz'^2} = \frac{1}{\lambda_L^2}B(z')$$</div>
       <p>(substituting in the London penetration depth definition, $\lambda_L^2 = m/(\mu_0n_se^2)$, along the way.) To simplify even further, we must assume that $B(z')$ is an exponential, as magnetic field strength is often well-modeled as growing or decaying exponentially with distance. Taking $B(z') = B_0e^{rz'}$ and substituting back in gives the characteristic equation $r^2 = 1/\lambda_L^2$. Solving this further gives $r = \pm1/\lambda_L$. And clearly, since the magnetic field must decay (not grow) with depth, the equation is:</p>
       <div class="eq">$$B(z') = B_0e^{-z'/\lambda_L}$$</div>
-
       <h3 id="penetration"><span class="term-tag"></span>Applying London Equations for Eddy Currents</h3>
       <p>To model the eddy currents, we start off by reusing a version of the second London equation:</p>
       <div class="eq">$$J = -\frac{1}{\mu_0\lambda_L^2}A$$</div>
@@ -470,9 +415,7 @@
       <div class="eq">$$\lambda(t) = \sqrt{\lambda_L^2 + \frac{\tau}{\mu\sigma\pi v(t)}\left(\frac{v_0}{v(t)}\right)^n}$$</div>
       <p>The reasoning behind this form: the skin-effect term $\frac{\tau}{\mu\sigma\pi v(t)}$ dominates at low $v$, since it's large there, while the $(v_0/v(t))^n$ factor drives that same term toward zero as $v$ grows past the onset speed $v_0$, leaving just $\lambda_L^2$ under the root at high speed. The exponent $n$ controls how sharply that handoff happens, and was solved for in Section 6 using the L0's real onset and top speeds.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="combining-forces">
       <span class="eyebrow-num">04. COMBINING FORCES</span>
       <h2>Combining Forces</h2>
@@ -486,24 +429,19 @@
       <div class="eq">$$F_z = \frac{w\,l\left(1-e^{-d/\lambda_L}\right)}{2\mu_0}\sum_{n=1}^{N} e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
       <p>Replacing the constant $\lambda_L$ with our velocity-dependent $\lambda(t)$ (to account for eddy currents strengthening with speed), and multiplying length and width into a single effective working area $A_{area} = wl$, gives the final repulsion force used throughout this model:</p>
       <div class="eq">$$F_{Repulsion} = \frac{\left(1-e^{-d/\lambda(t)}\right)}{2\mu_0}A_{area}\sum_{n=1}^{N}e^{-2k_nz}\left(A_n^2+B_n^2\right)$$</div>
-
       <h3 id="newtons-law"><span class="term-tag"></span>Deriving for Acceleration</h3>
       <p>Now we can create the second order ODE by using <strong class="term">Newton's second law</strong>. Two forces act on the train vertically: the repulsion just derived, and gravity ($g = 9.807\,m/s^2$). Plugging both in and dividing by mass gives the levitation ODE:</p>
       <div class="eq">$$\frac{d^2z}{dt^2} = \frac{F_{Repulsion}}{m} - 9.807\,\frac{m}{s^2}$$</div>
       <p>If $F_{Repulsion}/m \leq 9.807\,m/s^2$ for the entire period modeled, the train never actually lifts off, so $z=0$ and the acceleration is simply $d^2z/dt^2=0$. This clamp is what keeps the simulation from predicting the train sinking through the track before it reaches liftoff speed.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="motor">
       <span class="eyebrow-num">05. PROPULSION</span>
       <h2>Linear Synchronous Motor</h2>
-
       <figure class="result">
         <img src="fig_motor_diagram.png" alt="Diagram showing a rotary motor's stator and rotor unrolled flat into a linear synchronous motor, with the primary (stator) and secondary (rotor) labeled">
         <figcaption>FIG. 4. A linear synchronous motor is a rotary motor "unrolled" flat: the stator (primary) and rotor (secondary) become straight rails instead of concentric cylinders, producing straight-line thrust instead of torque.</figcaption>
       </figure>
-
       <h3 id="kirchhoff"><span class="term-tag"></span>Kirchhoff's Voltage Law &amp; Motor Current</h3>
       <p>This motor applies <strong class="term">Newton's second law</strong> to identify the motion caused by the related forces, giving $m\frac{dv}{dt} = F_{motor}(t) - F_{drag}(t)$. To find $F_{motor}(t)$, we start with the Lorentz law for the motor winding equation:</p>
       <div class="eq">$$F_{motor}(t) = k_tI(t)$$</div>
@@ -521,7 +459,6 @@
       <div class="eq">$$I(t) = \frac{1}{R_m}(V-k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
       <p>Substituting this back into the motor equation gives the motor force:</p>
       <div class="eq">$$F_{motor}(t) = k_t\frac{1}{R_m}(V - k_ev)\left(1-e^{-\frac{R_m}{L_m}t}\right)$$</div>
-
       <h3 id="drag"><span class="term-tag"></span>Drag Calculations</h3>
       <p>To calculate $F_{drag}$, we account for two types of drag: aerodynamic drag, from moving through air, and eddy drag (magnetic damping), which opposes motion in a magnetic field:</p>
       <div class="eq">$$F_{drag} = F_{aero} + F_{eddy}$$</div>
@@ -530,14 +467,11 @@
       <p>Modeling voltage as a smooth exponential ramp $V(t) = V_{max}(1-e^{-t/r})$, since real trains ramp voltage up gradually rather than switching it on instantly, and substituting $F_{motor}$ and $F_{drag}$ back into Newton's second law gives the full velocity ODE:</p>
       <div class="eq">$$\frac{dv}{dt} = \frac{1}{m}\left[k_t\frac{1}{R_m}\Big(V_{max}(1-e^{-t/r}) - k_ev\Big)\left(1-e^{-\frac{R_m}{L_m}t}\right) - C_1v(t) - \frac{1}{2}\rho C_dA_fv(t)^2\right]$$</div>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="constants">
       <span class="eyebrow-num">06. CONSTANTS</span>
       <h2>Constants</h2>
       <p>Values pulled directly from the essay's appendix: real specs modeled on the L0 series (Chuo Shinkansen line), plus Fourier coefficients fit to a 5-harmonic Halbach array.</p>
-
       <table class="constants-table">
         <caption>Table 1. Velocity model</caption>
         <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
@@ -549,7 +483,6 @@
         <tr><td class="sym">C<sub>1</sub></td><td>Eddy drag coefficient</td><td>29 N</td></tr>
         <tr><td class="sym">V<sub>max</sub></td><td>Maximum drive voltage</td><td>20,000 V</td></tr>
       </table>
-
       <table class="constants-table">
         <caption>Table 2. Levitation model</caption>
         <tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
@@ -560,7 +493,6 @@
         <tr><td class="sym">&lambda;<sub>L</sub></td><td>London penetration depth</td><td>1 &times; 10&#8315;&#8309; m</td></tr>
         <tr><td class="sym">v&#8320;</td><td>Eddy-current onset speed</td><td>30 m/s</td></tr>
       </table>
-
       <table class="constants-table">
         <caption>Table 3. Fourier / Halbach harmonics</caption>
         <tr><th>n</th><th>k<sub>n</sub></th><th>A<sub>n</sub></th><th>B<sub>n</sub></th></tr>
@@ -571,22 +503,17 @@
         <tr><td>5</td><td>62.832</td><td>0.001</td><td>0.0245</td></tr>
       </table>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="solving">
       <span class="eyebrow-num">07. CONSTANT FITTING</span>
       <h2>Solving for the Unknown Constants</h2>
       <p>Several constants in these equations ($k_t$, $A_{area}$, $v_0$, $n$) aren't published anywhere. They have to be <em>inferred</em> by forcing the model to match known real-world behavior of the L0. This was the part of the project that felt the least like "plugging into a formula" and the most like actual engineering judgment.</p>
-
       <h3 id="kconst"><span class="term-tag"></span>Motor Constant &amp; Resistance ($k$, $R_m$)</h3>
       <p>Assuming an ideal motor ($k_t \approx k_e \approx k$, from conservation of energy, since electrical power in equals mechanical power out), the steady-state force balance $F_{motor}(v_{top}) = F_{drag}(v_{top})$ at the L0's real top speed (167.5 m/s) gives one equation with two unknowns, $k$ and $R_m$, underdetermined on its own. The second condition comes from the L0's real spin-up time: the real train reaches top speed in about 4 minutes, so $R_m$ was tuned until the simulated spin-up time matched that window, and $k$ was solved from the resulting quadratic.</p>
       <p>This pins down $R_m \approx 2.3\ \Omega$ and $k \approx 114.22$, which satisfy the steady-state balance to 8 significant figures ($F_{motor}(167.5) = F_{drag}(167.5) = 43{,}092.908\ N$ on both sides) <em>and</em> reproduce the correct spin-up time: two independent real-world checks, not just an algebraic fit.</p>
-
       <h3 id="area"><span class="term-tag"></span>Effective Working Area ($A_{area}$)</h3>
       <p>At the point of maximum levitation, net vertical force is zero: $F_{Repulsion} = mg$. Plugging the train's mass into the repulsion equation and solving for the one unknown (area) gives:</p>
       <div class="eq">$$9.807(362{,}874) = 4.6566\times10^4 \cdot A_{area} \implies A_{area} \approx 76.44\ m^2$$</div>
-
       <h3 id="decay"><span class="term-tag"></span>Skin-Effect Decay Rate ($n$)</h3>
       <p>We used a given value for when levitation starts, $v_0 = 30\ m/s$ (observed directly from the simulation, the speed at which the train visibly lifts off), and double verified it in our equation by applying the same zero-net-force condition used earlier: at the exact speed levitation begins, the repulsion force must equal $mg$ at $z=0$. Solving this for the required penetration depth at that point gives:</p>
       <div class="eq">$$\lambda(t) = 0.12681640511\ m$$</div>
@@ -597,32 +524,25 @@
       <div class="eq">$$10^{-9} \geq \left(\frac{5}{28}\right)^n \implies n \geq \log_{5/28}(7.896\times10^{-9}) \approx 10.83$$</div>
       <p>Thus, $n=11$ is an acceptable integer to model the disappearance of the skin depth effect at high speed motion: the smallest whole number that satisfies both the onset behavior at $30\ m/s$ and the high-speed limit at $168\ m/s$ simultaneously.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="results">
       <span class="eyebrow-num">08. RESULTS</span>
       <h2>Results</h2>
-
       <h3><span class="term-tag"></span>Velocity: Euler vs. RK4</h3>
       <p>The model is accurate, as the velocity plateaus at the L0 maglev's max speed of 167.5 m/s (603 kph), taking 4 minutes (240 seconds) to reach the maximum, which is how long it takes an L0 to accelerate to max speed. Here it can also be seen that the RK4 method and Euler method are the same.</p>
       <figure class="result">
         <img src="fig_velocity.png" alt="Velocity of the maglev train over time, Euler vs RK4, plateauing near 167.5 m/s">
         <figcaption>FIG. 1. Velocity over the first 300 s. Both numerical methods agree closely.</figcaption>
       </figure>
-
       <h3><span class="term-tag"></span>Levitation Height: Euler vs. RK4</h3>
       <p>Here, Euler's method shows oscillation within the levitation, while RK4 smoothly predicts levitation. This is because there is extremely slight oscillation caused by the counteracting forces, and while Euler's method uses the acceleration at a single point (thus overexpressing this oscillation), RK4 is able to sum up and average out the oscillations, canceling them out, making predictions smooth.</p>
       <figure class="result">
         <img src="fig_levitation.png" alt="Levitation height over time, Euler diverging into oscillation while RK4 settles smoothly near 0.1 meters">
         <figcaption>FIG. 2. Levitation height in the first two minutes. Euler's method (left) diverges into unbounded oscillation; RK4 (right) settles cleanly.</figcaption>
       </figure>
-
       <p>This gap in accuracy is <strong class="term">global error</strong>: RK4's error scales with step size to the 4th power, versus 1st power for Euler, so RK4 stays accurate at step sizes where Euler visibly breaks down.</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="discussion">
       <span class="eyebrow-num">09. APPLICATION</span>
       <h2>Discussion &amp; Application</h2>
@@ -632,16 +552,12 @@
         <li><strong>Load limit:</strong> higher mass lowers the levitation height. At the moderate-danger threshold (9 cm), the overall mass limit is 460,000 kg. With the train itself at 360,000 kg, that leaves 100,000 kg for passengers and storage.</li>
       </ol>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <div class="part-marker"><span class="n">2</span> Part Two: MATLAB Extension</div>
-
     <section class="block" id="matlab-top">
       <span class="eyebrow-num">10. EXTENSION</span>
       <h2>MATLAB Extension: A Controller for Reducing Disturbances</h2>
       <p>So far I have modeled the movement and levitation of this train. However, there is a question left unanswered: what continuous disturbance to the train? What if this disturbance continues constantly? What if it's something repetitive, like track joints spaced at regular intervals or evenly spaced guideway supports? Could the train lose control? Thus, I am making an extension in MATLAB to design a feedback controller that can actually answer this.</p>
-
       <h3 id="ml-plant"><span class="term-tag"></span>The Linearized Plant</h3>
       <p>I'll assume the disturbance hits while cruising at $v_{top}=167.5\ m/s$, not from a standing start, so both $\delta z$ and $\delta v$ stay small. That lets me linearize $F_{Repulsion}$ with a first order Taylor expansion in both variables:</p>
       <div class="eq">$$F_{Repulsion}(z_0+\delta z,\ v_{top}+\delta v) \approx F_{Repulsion}(z_0,v_{top}) + \frac{\partial F}{\partial z}\bigg|_{z_0,v_{top}}\delta z + \frac{\partial F}{\partial v}\bigg|_{z_0,v_{top}}\delta v$$</div>
@@ -649,23 +565,19 @@
       <div class="eq">$$m\ddot{\delta z} + k\delta z = F_{ext}(t), \qquad k \equiv -\frac{\partial F}{\partial z}\bigg|_{z_0}$$</div>
       <p>This has no damping. My force law never depends on $\dot z$, so a disturbance here would ring forever at the natural frequency and never settle. Real EDS suspensions do have vertical eddy-current damping that this derivation never modeled, so I added a literature-sourced coefficient $c$ (Rote, Argonne ANL/ES/RP-106247, 2001), giving the plant I actually use:</p>
       <div class="eq">$$m\ddot{\delta z} + c\dot{\delta z} + k\delta z = F_{ext}(t)$$</div>
-
       <figure class="result">
         <img src="fig_open_loop_step.png" alt="Open-loop step response of the linearized maglev plant to a 1 Newton disturbance force, oscillating and slowly decaying toward a steady-state value over 25 seconds">
         <figcaption>FIG. 5. Open-loop response to a 1N step disturbance. The oscillation rings at the plant's 2.5 Hz natural frequency, decaying slowly toward its steady-state deflection, consistent with the weak, literature-sourced intrinsic damping (4.5s decay time).</figcaption>
       </figure>
-
       <p>Laplace-transforming both sides (zero initial conditions, the train starts at rest) turns every time-derivative into a power of $s$, giving the general transfer function:</p>
       <div class="eq">$$G(s) = \frac{Z(s)}{F(s)} = \frac{1}{ms^2+cs+k}$$</div>
       <p>where $Z(s)$ is the Laplace transform of $\delta z(t)$ and $F(s)$ is the Laplace transform of $F_{ext}(t)$.</p>
-
       <h3 id="ml-bode"><span class="term-tag"></span>Bode Plot &amp; Stability Margins</h3>
       <figure class="result">
         <img src="fig_bode.png" alt="Open-loop Bode plot of the maglev plant, showing a sharp resonance peak at 2.5 Hz and phase dropping through -90 degrees at the same frequency">
         <figcaption>FIG. 6. Open-loop Bode plot. The resonance peak lands exactly at 2.5 Hz, matching the natural frequency computed from the plant's poles.</figcaption>
       </figure>
       <p>Heres we can see that the open-loop gain and phase margins never reach -180 or 0 dB, implying the impact never fully gets dampened out and causes a permant change.The one thing the plot does show clearly is the resonance itself, visible as the sharp spike at 2.5 Hz.</p>
-
       <h3 id="ml-controller"><span class="term-tag"></span>Controller Design</h3>
       <p>Two independent PID designs were built and cross-checked against each other:</p>
       <ul>
@@ -678,9 +590,7 @@
       </figure>
       <p>Our sefl built design keeps essentially the same oscillation frequency as the open-loop plant and simply adds damping, matching how real EDS dampers actually behave. <code>pidtune()</code>'s automatic design eliminates the oscillation altogether. </p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="ml-results">
       <span class="eyebrow-num">11. RESULTS</span>
       <h2>Results</h2>
@@ -689,7 +599,6 @@
         <figcaption>FIG. 8. Height response to a sudden 62 kg passenger load (the same figure the essay itself used for an average person's weight, Sec 4.4).</figcaption>
       </figure>
       <p>The open-loop system barely decays. While Pid Pole placement settles within its 1-2 seconds, missing it's target but still being considerably effective. <code>pidtune()</code> is considerably faster, but uses force that could be unrealistic in the real world/</p>
-
       <table class="constants-table">
         <caption>Dominant-pole decay time</caption>
         <tr><th>Design</th><th>Decay time</th></tr>
@@ -697,28 +606,22 @@
         <tr><td class="sym">Pole placement</td><td>0.500 s</td></tr>
         <tr><td class="sym">pidtune</td><td>0.119 s</td></tr>
       </table>
-
       <table class="constants-table">
         <caption>Steady-state height offset under the 62 kg load</caption>
         <tr><th>Design</th><th>Offset</th></tr>
         <tr><td class="sym">Open loop</td><td>0.00676 mm (permanent)</td></tr>
         <tr><td class="sym">Pole placement & pidtune</td><td>0 mm</td></tr>
       </table>
-
       <p>The open loop's offset is small in absolute terms here, but it is <em>permanent</em>, while controllers eliminate this disturbance</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <section class="block" id="ml-conclusion">
       <span class="eyebrow-num">12. CONCLUSION</span>
       <h2>Conclusion</h2>
       <p>While I originally showed differential equations could model EDS levitation successfully, this new extension linearizes the force equation to design two controllers around it.</p>
       <p>What started as an open-loop model now has allowed me create a closed-loop version, potentially solving several of the issues that Maglevs can encounter</p>
     </section>
-
     <div class="field-divider"><svg viewBox="0 0 700 28"><path d="M0,14 C120,-4 180,32 300,14 C420,-4 480,32 600,14 C650,4 680,20 700,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
-
     <footer class="links" id="links">
       <div class="source-card">
         <div>
@@ -732,15 +635,11 @@
         <li><span class="arrow">&rarr;</span><a href="index.html">&larr; Back to portfolio</a></li>
       </ul>
     </footer>
-
   </main>
 </div>
-
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false});"></script>
-
 <script>
-
   // mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const toc = document.getElementById('toc');
@@ -751,14 +650,12 @@
   window.addEventListener('resize', checkMobile);
   navToggle.addEventListener('click', () => toc.classList.toggle('open'));
   toc.addEventListener('click', (e) => { if (e.target.tagName === 'A') toc.classList.remove('open'); });
-
   // scroll reveal
   const blocks = document.querySelectorAll('section.block');
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); });
   }, { threshold: 0.08 });
   blocks.forEach(b => revealObserver.observe(b));
-
   // active TOC highlight
   const navLinks = document.querySelectorAll('nav.toc a');
   const sections = document.querySelectorAll('section.block[id], footer.links[id]');
@@ -775,6 +672,5 @@
   }, { rootMargin: '-15% 0px -70% 0px' });
   sections.forEach(s => navObserver.observe(s));
 </script>
-
 </body>
 </html>
