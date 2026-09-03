@@ -11,12 +11,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://senai-sorsa.github.io">
 <title>Senai Sorsa - Aerospace Engineering</title>
-
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,7 +39,7 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
 ::-webkit-scrollbar-thumb{background:#800000}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .reveal.in{opacity:1;transform:none}
-.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}
 .nl{position:relative}
 .nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:currentColor;transition:width .18s ease}
 .nl:hover::after,.nl.on::after{width:100%}
@@ -50,7 +48,6 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
 </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 antialiased">
-
 <!-- NAV -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-zinc-900 transition-colors duration-200"
   :class="sc?'bg-zinc-950':'bg-zinc-950/0'">
@@ -59,8 +56,9 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
       <span class="text-white">senai</span><span class="text-accent">sorsa</span>
     </a>
     <ul class="hidden md:flex items-center gap-7 text-sm" role="list">
-      <li><a href="maglev-modeling.html" class="nl text-zinc-400 hover:text-white transition-colors">MATLAB Project</a></li>
       <li><a href="wind-turbine.html" class="nl text-zinc-400 hover:text-white transition-colors">SOLIDWORKS Project</a></li>
+      <li><a href="maglev-modeling.html" class="nl text-zinc-400 hover:text-white transition-colors">MATLAB Project</a></li>
+      <li><a href="urban-revival.html" class="nl text-zinc-400 hover:text-white transition-colors">NASA SEES Project</a></li>
       <li><a href="dermascan.html" class="nl text-zinc-400 hover:text-white transition-colors">AI Data Analysis</a></li>
       <li><a href="#about" class="nl text-zinc-400 hover:text-white transition-colors" :class="s==='about'?'on':''">About</a></li>
     </ul>
@@ -77,8 +75,9 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
     class="md:hidden bg-zinc-950 border-t border-zinc-900">
     <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
-      <li><a href="maglev-modeling.html" class="block text-zinc-300 hover:text-accent transition-colors">MATLAB Project</a></li>
       <li><a href="wind-turbine.html" class="block text-zinc-300 hover:text-accent transition-colors">SOLIDWORKS Project</a></li>
+      <li><a href="maglev-modeling.html" class="block text-zinc-300 hover:text-accent transition-colors">MATLAB Project</a></li>
+      <li><a href="urban-revival.html" class="block text-zinc-300 hover:text-accent transition-colors">NASA SEES Project</a></li>
       <li><a href="dermascan.html" class="block text-zinc-300 hover:text-accent transition-colors">AI Data Analysis</a></li>
       <li><a href="#about" @click="mm=false" class="block text-zinc-300 hover:text-accent transition-colors">About</a></li>
       <li class="pt-2 border-t border-zinc-900">
@@ -87,9 +86,7 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     </ul>
   </div>
 </header>
-
 <main>
-
 <!-- HERO -->
 <section id="hero" class="pt-36 pb-24">
   <div class="max-w-6xl mx-auto px-6">
@@ -107,16 +104,33 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     </div>
   </div>
 </section>
-
 <!-- PROJECTS -->
 <section id="projects" class="py-24 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6">
     <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-16">Projects</p>
-
     <div class="flex flex-col gap-28">
 
+      <!-- ROW 1: SOLIDWORKS -->
       <article class="reveal d1 grid md:grid-cols-2 gap-14 items-center">
         <div class="relative bg-zinc-900 p-5 order-1">
+          <div class="relative overflow-hidden">
+            <img src="gearbox.gif" alt="Animated SolidWorks gearbox assembly" class="w-full h-72 object-cover" loading="lazy">
+            <div class="absolute top-4 left-4">
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">SOLIDWORKS</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Project</span>
+            </div>
+          </div>
+        </div>
+        <div class="order-2">
+          <h3 class="font-display font-bold text-3xl text-white mb-5">SolidWorks Projects</h3>
+          <p class="text-zinc-400 leading-relaxed mb-8">A working two stage gearbox assembly built around real mates and a motion study, alongside a growing set of single-part builds and the in-progress CAD for the maglev turbine rotor.</p>
+          <a href="wind-turbine.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
+        </div>
+      </article>
+
+      <!-- ROW 2: MATLAB -->
+      <article class="reveal d2 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1 md:order-2">
           <div class="relative overflow-hidden">
             <img src="maglevtrain.jpg" alt="Maglev train mathematical modeling" class="w-full h-72 object-cover" loading="lazy">
             <div class="absolute top-4 left-4">
@@ -125,32 +139,34 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
             </div>
           </div>
         </div>
-        <div class="order-2">
+        <div class="order-2 md:order-1">
           <h3 class="font-display font-bold text-3xl text-white mb-5">Maglev Levitation &amp; Control</h3>
           <p class="text-zinc-400 leading-relaxed mb-8">Modeled EDS maglev levitation with differential equations, then extended it in MATLAB with a linearized plant, Bode analysis, and a PID controller.</p>
           <a href="maglev-modeling.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
         </div>
       </article>
 
-      <article class="reveal d2 grid md:grid-cols-2 gap-14 items-center">
-        <div class="relative bg-zinc-900 p-5 order-1 md:order-2">
+      <!-- ROW 3: NASA SEES -->
+      <article class="reveal d3 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1">
           <div class="relative overflow-hidden">
-            <img src="windturbine.jpg" alt="Frictionless wind turbine project" class="w-full h-72 object-cover" loading="lazy">
+            <img src="urban-revival-poster.jpg" alt="Urban Revival NASA SEES research poster" class="w-full h-72 object-cover object-top" loading="lazy">
             <div class="absolute top-4 left-4">
-              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">SOLIDWORKS</span>
-              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Project</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit">NASA SEES</span>
+              <span class="block bg-accent text-white text-sm font-bold px-2 py-0.5 w-fit mt-1">Research</span>
             </div>
           </div>
         </div>
-        <div class="order-2 md:order-1">
-          <h3 class="font-display font-bold text-3xl text-white mb-5">Frictionless Wind Turbine</h3>
-          <p class="text-zinc-400 leading-relaxed mb-8">Designed and modeled a magnetic-levitation wind turbine using active magnetic bearings, then built a working prototype. Top 48 finalist, Dallas Regional Science Fair.</p>
-          <a href="wind-turbine.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
+        <div class="order-2">
+          <h3 class="font-display font-bold text-3xl text-white mb-5">Urban Revival</h3>
+          <p class="text-zinc-400 leading-relaxed mb-8">Co-authored NASA SEES research using satellite and remote sensing data to classify urban development patterns across five U.S. cities, presented at the American Geophysical Union Fall Meeting.</p>
+          <a href="urban-revival.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
         </div>
       </article>
 
-      <article class="reveal d3 grid md:grid-cols-2 gap-14 items-center">
-        <div class="relative bg-zinc-900 p-5 order-1">
+      <!-- ROW 4: AI DATA ANALYSIS -->
+      <article class="reveal d4 grid md:grid-cols-2 gap-14 items-center">
+        <div class="relative bg-zinc-900 p-5 order-1 md:order-2">
           <div class="relative overflow-hidden">
             <img src="dermascan.jpg" alt="Skin cancer diagnostic AI model" class="w-full h-72 object-cover" loading="lazy">
             <div class="absolute top-4 left-4">
@@ -159,7 +175,7 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
             </div>
           </div>
         </div>
-        <div class="order-2">
+        <div class="order-2 md:order-1">
           <h3 class="font-display font-bold text-3xl text-white mb-5">Skin Cancer Diagnostic Model</h3>
           <p class="text-zinc-400 leading-relaxed mb-8">Built a diagnostic model reaching 98.8% accuracy in skin cancer detection, integrated into a mobile app prototype. Qualified for the Texas State Science &amp; Engineering Fair.</p>
           <a href="dermascan.html" class="flex items-center justify-center w-full bg-white text-zinc-950 font-medium py-4 hover:bg-zinc-200 transition-colors">Learn more</a>
@@ -169,7 +185,6 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     </div>
   </div>
 </section>
-
 <!-- ABOUT -->
 <section id="about" class="py-24 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6 max-w-2xl">
@@ -189,9 +204,7 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     </div>
   </div>
 </section>
-
 </main>
-
 <footer class="border-t border-zinc-900">
   <div class="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-4 items-center text-center md:text-left">
     <p class="text-xs text-zinc-600">&copy; <span id="yr"></span> Senai Sorsa. All rights reserved.</p>
@@ -204,7 +217,6 @@ h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
     </div>
   </div>
 </footer>
-
 <script>
 function app() {
   return {

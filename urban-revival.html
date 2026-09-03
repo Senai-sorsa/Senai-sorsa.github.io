@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Revival | Senai Sorsa</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="description" content="NASA SEES research poster: analyzing urbanization through changing land cover using satellite remote sensing and machine learning, presented at the AGU Fall Meeting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #09090B; --paper-raised: #18181B; --ink: #F4F4F5; --ink-soft: #A1A1AA; --ink-faint: #71717A;
+    --accent: #800000; --accent-light: #A13333; --accent-tint: #1F1416; --rule: #27272A;
+    --header-h: 64px; --content-w: 1100px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'DM Sans', sans-serif; font-size:17.5px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  h1{ font-family:'PT Sans', sans-serif; }
+  .eyebrow, .meta{ font-family:'JetBrains Mono', monospace; }
+  a{ color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset:3px; }
+  a:hover{ text-decoration-color:var(--accent); }
+  header.topbar{
+    position:fixed; top:0; left:0; right:0; height:var(--header-h); z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px; background:var(--paper); border-bottom:1px solid var(--rule);
+  }
+  header.topbar .logo{ font-family:'PT Sans', sans-serif; font-weight:700; font-size:19px; text-decoration:none; color:var(--ink); }
+  header.topbar .logo span{ color:var(--accent); }
+  .pill-btn{
+    display:inline-flex; align-items:center; gap:7px; font-family:'DM Sans', sans-serif; font-weight:500; font-size:13.5px;
+    color:#fff; background:var(--accent); padding:9px 18px; text-decoration:none; transition:background .15s ease;
+  }
+  .pill-btn:hover{ background:var(--accent-light); text-decoration:none; }
+  .pill-btn svg{ width:14px; height:14px; }
+  main{ max-width:var(--content-w); margin:0 auto; padding:0 40px 110px; padding-top:calc(var(--header-h) + 56px); }
+  .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  h1{ font-size:34px; line-height:1.16; font-weight:700; margin:0 0 16px; letter-spacing:-0.01em; max-width:820px; }
+  .meta{ font-size:13px; color:var(--ink-faint); display:flex; gap:18px; flex-wrap:wrap; margin-bottom:36px; }
+  .poster-frame{ border:1px solid var(--rule); background:var(--paper-raised); padding:14px; }
+  .poster-frame img{ width:100%; display:block; }
+  footer.links{ max-width:820px; margin-top:44px; padding-top:32px; border-top:1px solid var(--rule); }
+  footer.links ul{ list-style:none; padding:0; margin:0; }
+  footer.links li{ margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:14.5px; }
+  footer.links .arrow{ color:var(--accent); margin-right:8px; }
+  @media (max-width: 700px){
+    main{ padding-left:20px; padding-right:20px; }
+    h1{ font-size:26px; }
+    body{ font-size:16.5px; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a href="index.html" class="logo">senai<span>sorsa</span></a>
+  <a href="index.html" class="pill-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+    Portfolio
+  </a>
+</header>
+<main>
+  <div class="eyebrow">NASA SEES Internship &middot; Team Research</div>
+  <h1>Urban Revival: Analyzing Urbanization Through Changing Land Cover</h1>
+  <div class="meta">
+    <span>Satellite Remote Sensing</span>
+    <span>&middot;</span>
+    <span>Google Earth Engine</span>
+    <span>&middot;</span>
+    <span>Machine Learning Classification</span>
+    <span>&middot;</span>
+    <span>AGU Fall Meeting</span>
+  </div>
+  <div class="poster-frame">
+    <img src="urban-revival-poster.jpg" alt="Urban Revival research poster covering the introduction, abstract, methods, results, and conclusion of the land cover study">
+  </div>
+  <footer class="links">
+    <ul>
+      <li><span class="arrow">&rarr;</span><a href="index.html">&larr; Back to portfolio</a></li>
+    </ul>
+  </footer>
+</main>
+</body>
+</html>
