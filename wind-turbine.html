@@ -42,7 +42,7 @@
     -webkit-font-smoothing:antialiased;
   }
   h1,h2,h3{ font-family:'PT Sans', sans-serif; }
-  .eyebrow, .meta, .skill-tag, .badge{ font-family:'JetBrains Mono', monospace; }
+  .eyebrow, .meta, .skill-tag, .badge, .viewer-hint{ font-family:'JetBrains Mono', monospace; }
   a{ color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset:3px; }
   a:hover{ text-decoration-color:var(--accent); }
   header.topbar{
@@ -56,11 +56,13 @@
     display:inline-flex; align-items:center; gap:7px;
     font-family:'DM Sans', sans-serif; font-weight:500; font-size:13.5px; color:#fff;
     background:var(--accent); padding:9px 18px; text-decoration:none; transition:background .15s ease;
+    border:1.5px solid var(--accent);
   }
-  .pill-btn:hover{ background:var(--accent-light); text-decoration:none; }
+  .pill-btn:hover{ background:var(--accent-light); border-color:var(--accent-light); text-decoration:none; }
   .pill-btn svg{ width:14px; height:14px; }
   .pill-btn.secondary{ background:none; border:1.5px solid var(--accent); color:var(--accent); }
   .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); }
+  .pill-btn.small{ font-size:12.5px; padding:8px 14px; }
   main{ max-width:var(--content-w); margin:0 auto; padding:0 40px 120px; padding-top:calc(var(--header-h) + 56px); }
   .page-intro{ max-width:760px; margin-bottom:8px; }
   .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
@@ -81,27 +83,30 @@
     background:#111113; border-right:1px solid var(--rule); overflow:hidden; min-height:340px;
   }
   .feature-box .media img{ width:100%; height:100%; object-fit:contain; display:block; }
-  .feature-box .info{ padding:40px 40px; display:flex; flex-direction:column; justify-content:center; }
-  .feature-box h2{ font-size:25px; font-weight:700; margin:0 0 14px; }
-  .feature-box p{ color:var(--ink-soft); margin:0 0 20px; font-size:16px; }
+  .feature-box .info{ padding:36px 40px; display:flex; flex-direction:column; justify-content:center; }
+  .feature-box h2{ font-size:24px; font-weight:700; margin:0 0 14px; }
+  .feature-box .skill-tags{ margin-bottom:22px; }
   .skill-tags{ display:flex; flex-wrap:wrap; gap:8px; }
-  .skill-tag{ font-size:11.5px; letter-spacing:0.04em; color:var(--ink-soft); border:1px solid var(--rule); padding:6px 11px; }
+  .skill-tag{ font-size:11.5px; letter-spacing:0.03em; color:var(--ink-soft); border:1px solid var(--rule); padding:6px 11px; }
   .gallery-row{ display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
-  .card{ background:var(--paper-raised); border:1px solid var(--rule); display:flex; flex-direction:column; height:100%; }
+  .card{ background:var(--paper-raised); border:1px solid var(--rule); display:flex; flex-direction:column; }
   .card .media{ background:#111113; border-bottom:1px solid var(--rule); overflow:hidden; }
-  .card .media img{ width:100%; display:block; object-fit:cover; }
-  .card .body{ padding:26px 26px 28px; display:flex; flex-direction:column; flex:1; }
-  .card h3{ font-size:20px; font-weight:700; margin:0 0 10px; }
-  .card p{ color:var(--ink-soft); font-size:15px; margin:0 0 18px; flex:1; }
-  .primary-card .media img{ height:280px; }
-  .primary-card .body{ padding:30px 30px 32px; }
+  .card .media img{ width:100%; display:block; object-fit:contain; }
+  .card .body{ padding:20px 22px 24px; display:flex; flex-direction:column; flex:1; }
+  .card h3{ font-size:18px; font-weight:700; margin:0 0 12px; }
+  .primary-card .media{ height:300px; }
+  .primary-card .media img{ height:100%; }
+  .primary-card .body{ padding:28px 30px 30px; }
+  .primary-card p{ color:var(--ink-soft); font-size:15px; margin:0 0 20px; }
   .stack{ display:flex; flex-direction:column; gap:20px; }
-  .stack .card{ flex-direction:row; }
-  .stack .card .media{ width:150px; flex:0 0 150px; border-bottom:none; border-right:1px solid var(--rule); }
-  .stack .card .media img{ height:100%; }
-  .stack .card .body{ padding:20px 22px; }
-  .stack .card h3{ font-size:17.5px; margin-bottom:8px; }
-  .stack .card p{ font-size:14px; margin-bottom:0; }
+
+  /* interactive STL viewer, falls back to the static render until a matching .stl file exists */
+  .viewer-wrap{ position:relative; height:220px; background:#111113; border-bottom:1px solid var(--rule); overflow:hidden; }
+  .viewer-wrap .fallback-img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .viewer-wrap canvas{ width:100% !important; height:100% !important; display:block; cursor:grab; }
+  .viewer-wrap canvas:active{ cursor:grabbing; }
+  .viewer-hint{ position:absolute; bottom:8px; right:10px; font-size:10px; letter-spacing:0.02em; color:var(--ink-faint); background:rgba(9,9,11,0.72); padding:3px 8px; }
+
   footer.links{ max-width:760px; margin-top:70px; padding-top:32px; border-top:1px solid var(--rule); }
   footer.links ul{ list-style:none; padding:0; margin:0; }
   footer.links li{ margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:14.5px; }
@@ -112,9 +117,6 @@
     .feature-box{ grid-template-columns:1fr; }
     .feature-box .media{ min-height:260px; border-right:none; border-bottom:1px solid var(--rule); }
     .gallery-row{ grid-template-columns:1fr; }
-    .stack .card{ flex-direction:column; }
-    .stack .card .media{ width:100%; flex:none; border-right:none; border-bottom:1px solid var(--rule); }
-    .stack .card .media img{ height:170px; }
     body{ font-size:16.5px; }
   }
 </style>
@@ -131,7 +133,7 @@
   <div class="page-intro">
     <div class="eyebrow">CAD &middot; SolidWorks</div>
     <h1>Solid Works Projects</h1>
-    <p>A running set of SolidWorks builds, from single parts to a working multi-part assembly, kept here as I go through the modeling, mating, and motion study skills I need for the maglev turbine rotor below.</p>
+    <p>A running set of SolidWorks builds, kept here as I go through the modeling, mating, and motion study skills I need for the maglev turbine rotor below. Models with a matching .stl in the repo load as interactive viewers, drag to rotate, scroll to zoom.</p>
   </div>
 
   <div class="field-divider"><svg viewBox="0 0 1100 28"><path d="M0,14 C180,-4 260,32 460,14 C660,-4 740,32 940,14 C1000,4 1050,20 1100,14" stroke="#800000" stroke-width="1.4" fill="none"/></svg></div>
@@ -143,7 +145,6 @@
     </div>
     <div class="info">
       <h2>Two-Stage Spur Gearbox</h2>
-      <p>A small gearbox built to actually put assembly mates through their paces instead of just modeling static parts sitting next to each other. Each shaft seats in its bearing bore with a concentric and coincident mate, and the two spur gears are tied together with a gear mate so the rotation ratio holds once the assembly is driven in a motion study. The housing started as a simple extruded shell, then picked up counterbored corner holes once the fastening was worked out. This was the project where an assembly actually ran instead of just sitting there looking like it might.</p>
       <div class="skill-tags">
         <span class="skill-tag">Concentric &amp; Coincident Mates</span>
         <span class="skill-tag">Gear Mate</span>
@@ -151,6 +152,7 @@
         <span class="skill-tag">Hole Wizard</span>
         <span class="skill-tag">Shelled Housing</span>
       </div>
+      <a href="gearbox.sldasm" download class="pill-btn secondary small" style="align-self:flex-start;">Download SolidWorks Assembly</a>
     </div>
   </div>
 
@@ -162,32 +164,57 @@
         <img src="windturbine.jpg" alt="Frictionless maglev wind turbine research and prototype">
       </div>
       <div class="body">
-        <h3>Frictionless Wind Turbine</h3>
-        <p>The next SolidWorks build: the active magnetic bearing wind turbine rotor from the research below, including the dual Halbach array housing, the flux modulated magnetic gear, and the magnetic thrust bearing, sized against the math and prototype testing already done for the Dallas Regional Science Fair. Full derivations, parts, and test results are in the poster.</p>
+        <h3 style="font-size:22px;">Frictionless Wind Turbine</h3>
+        <p>The next SolidWorks build: the active magnetic bearing rotor from the research below, including the dual Halbach array housing, the flux modulated magnetic gear, and the magnetic thrust bearing.</p>
         <a href="maglev-poster.html" class="pill-btn secondary" style="align-self:flex-start;">Read the Research Poster</a>
       </div>
     </div>
 
     <div class="stack">
       <div class="card">
-        <div class="media"><img src="spoon.png" alt="Lofted cutlery spoon SolidWorks model"></div>
+        <div class="viewer-wrap" data-stl="spoon.stl" data-color="0xC7C7CC">
+          <img src="spoon.png" alt="Lofted cutlery spoon SolidWorks model" class="fallback-img">
+          <span class="viewer-hint" hidden>drag to rotate</span>
+        </div>
         <div class="body">
           <h3>Lofted Cutlery Spoon</h3>
-          <p>A single-part exercise in surface transitions. The bowl and handle are two very different cross sections, so this uses a loft between profile sketches with guide curves controlling the taper, plus fillets smoothing the neck where the two shapes meet.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Loft &amp; Guide Curves</span>
+            <span class="skill-tag">Fillets</span>
+            <span class="skill-tag">Multi-Profile Sketching</span>
+          </div>
+          <a href="spoon.sldprt" download class="pill-btn secondary small" style="align-self:flex-start;">Download SolidWorks File</a>
         </div>
       </div>
       <div class="card">
-        <div class="media"><img src="sheetmetal.png" alt="Sheet metal mounting bracket SolidWorks model"></div>
+        <div class="viewer-wrap" data-stl="sheetmetal.stl" data-color="0x9AA3AD">
+          <img src="sheetmetal.png" alt="Sheet metal mounting bracket SolidWorks model" class="fallback-img">
+          <span class="viewer-hint" hidden>drag to rotate</span>
+        </div>
         <div class="body">
           <h3>Sheet Metal Mounting Bracket</h3>
-          <p>An L shaped bracket built with the sheet metal tools instead of modeling it as a solid and hoping the bends would work out. Base and edge flanges set the material thickness and bend radius, and the flat pattern confirmed the folds lined up before anything gets cut.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Sheet Metal Flanges</span>
+            <span class="skill-tag">Bend Table</span>
+            <span class="skill-tag">Flat Pattern</span>
+            <span class="skill-tag">Hole Wizard</span>
+          </div>
+          <a href="sheetmetal.sldprt" download class="pill-btn secondary small" style="align-self:flex-start;">Download SolidWorks File</a>
         </div>
       </div>
       <div class="card">
-        <div class="media"><img src="soapstand.png" alt="Curved rail soap stand SolidWorks model"></div>
+        <div class="viewer-wrap" data-stl="soapstand.stl" data-color="0xC0C0C6">
+          <img src="soapstand.png" alt="Curved rail soap stand SolidWorks model" class="fallback-img">
+          <span class="viewer-hint" hidden>drag to rotate</span>
+        </div>
         <div class="body">
           <h3>Curved Rail Soap Stand</h3>
-          <p>A half-moon frame with rails swept along a 3D sketch rather than a flat profile, since the rim curves in two directions at once. Each rail sweeps along its own guide curve, then patterns across the frame so the spacing stays even.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">3D Sketching</span>
+            <span class="skill-tag">Swept Boss/Base</span>
+            <span class="skill-tag">Component Pattern</span>
+          </div>
+          <a href="soapstand.sldprt" download class="pill-btn secondary small" style="align-self:flex-start;">Download SolidWorks File</a>
         </div>
       </div>
     </div>
@@ -200,5 +227,96 @@
     </ul>
   </footer>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// Progressive enhancement: each .viewer-wrap shows its static render (fallback-img) by
+// default. If a matching .stl file exists in the repo at the path in data-stl, it swaps
+// in a small rotatable three.js viewer. If the file 404s or three.js fails to load
+// (offline, CDN blocked), the static image just stays put, nothing breaks.
+(function () {
+  function initViewer(wrap) {
+    var stlPath = wrap.getAttribute('data-stl');
+    var colorHex = Number(wrap.getAttribute('data-color')) || 0xB0B0B6;
+    var fallback = wrap.querySelector('.fallback-img');
+    var hint = wrap.querySelector('.viewer-hint');
+
+    var loader = new THREE.STLLoader();
+    loader.load(stlPath, function (geometry) {
+      var width = wrap.clientWidth, height = wrap.clientHeight;
+
+      var canvas = document.createElement('canvas');
+      wrap.appendChild(canvas);
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 5000);
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      geometry.computeBoundingBox();
+      geometry.center();
+      var size = new THREE.Vector3();
+      geometry.boundingBox.getSize(size);
+      var maxDim = Math.max(size.x, size.y, size.z) || 1;
+      var scale = 100 / maxDim;
+      geometry.scale(scale, scale, scale);
+      geometry.computeVertexNormals();
+
+      var material = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.25, roughness: 0.55 });
+      var mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      var key = new THREE.DirectionalLight(0xffffff, 0.9);
+      key.position.set(1, 1.4, 1.2);
+      scene.add(key);
+      var fill = new THREE.DirectionalLight(0xffffff, 0.35);
+      fill.position.set(-1, -0.5, -1);
+      scene.add(fill);
+
+      camera.position.set(80, 70, 110);
+      camera.lookAt(0, 0, 0);
+
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.minDistance = 40;
+      controls.maxDistance = 400;
+
+      fallback.hidden = true;
+      if (hint) hint.hidden = false;
+
+      window.addEventListener('resize', function () {
+        var w = wrap.clientWidth, h = wrap.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+
+      (function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      })();
+    }, undefined, function () {
+      // no .stl at this path yet, static render stays as-is
+    });
+  }
+
+  function boot() {
+    if (typeof THREE === 'undefined' || !THREE.STLLoader || !THREE.OrbitControls) return;
+    document.querySelectorAll('.viewer-wrap[data-stl]').forEach(initViewer);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
 </body>
 </html>
