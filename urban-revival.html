@@ -31,11 +31,14 @@
   }
   header.topbar .logo{ font-family:'PT Sans', sans-serif; font-weight:700; font-size:19px; text-decoration:none; color:var(--ink); }
   header.topbar .logo span{ color:var(--accent); }
+  .topbar-actions{ display:flex; gap:10px; }
   .pill-btn{
     display:inline-flex; align-items:center; gap:7px; font-family:'DM Sans', sans-serif; font-weight:500; font-size:13.5px;
     color:#fff; background:var(--accent); padding:9px 18px; text-decoration:none; transition:background .15s ease;
   }
   .pill-btn:hover{ background:var(--accent-light); text-decoration:none; }
+  .pill-btn.secondary{ background:transparent; color:var(--ink); border:1px solid var(--rule); }
+  .pill-btn.secondary:hover{ background:var(--accent-tint); color:var(--accent); border-color:var(--accent); }
   .pill-btn svg{ width:14px; height:14px; }
   main{ max-width:var(--content-w); margin:0 auto; padding:0 40px 110px; padding-top:calc(var(--header-h) + 56px); }
   .eyebrow{ font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
@@ -57,10 +60,16 @@
 <body>
 <header class="topbar">
   <a href="index.html" class="logo">senai<span>sorsa</span></a>
-  <a href="index.html" class="pill-btn">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
-    Portfolio
-  </a>
+  <div class="topbar-actions">
+    <a href="index.html" class="pill-btn secondary">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+      Portfolio
+    </a>
+    <a href="Urban Revival Poster.pdf" download class="pill-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
+      Download PDF
+    </a>
+  </div>
 </header>
 <main>
   <div class="eyebrow">NASA SEES Internship &middot; Team Research</div>
@@ -68,15 +77,18 @@
   <div class="meta">
     <span>Satellite Remote Sensing</span>
     <span>&middot;</span>
+    <span>Google Earth Engine</span>
+    <span>&middot;</span>
     <span>Machine Learning Classification</span>
     <span>&middot;</span>
-    <span>Submitted to AGU Fall Meeting</span>
+    <span>AGU Fall Meeting</span>
   </div>
   <div class="poster-frame">
     <img src="urban-revival-poster.jpg" alt="Urban Revival research poster covering the introduction, abstract, methods, results, and conclusion of the land cover study">
   </div>
   <footer class="links">
     <ul>
+      <li><span class="arrow">&rarr;</span><a href="Urban Revival Poster.pdf" download>Download this poster as a PDF</a></li>
       <li><span class="arrow">&rarr;</span><a href="index.html">&larr; Back to portfolio</a></li>
     </ul>
   </footer>
