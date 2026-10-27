@@ -1,25 +1,26 @@
-# Folio— Freelance Portfolio Template (HTML · Tailwind · Alpine.js)
-#### Preview
+# Senai Sorsa — Portfolio
 
- - [Demo](https://themewagon.github.io/folio-html/)
+Personal portfolio site for Senai Sorsa, an Aerospace Engineering student at Texas A&M University.
 
-#### Download
- - [Download from ThemeWagon](https://themewagon.com/themes/folio-html/)
+Live site: https://senai-sorsa.github.io/
 
-## Getting Started
+## Pages
 
-1. Clone Repository
-```
-git clone https://github.com/themewagon/folio-html.git
-```
+- `index.html` — home page
+- `projects.html` — project index
+- `wind-turbine.html` — SOLIDWORKS project
+- `maglev-modeling.html` — MATLAB project
+- `urban-revival.html` — NASA SEES project
+- `maglev-poster.html`, `case-study.html`, `blog.html`, `blog-article.html`, `resume.html` — supporting pages
+- `404.html` — custom not-found page
 
-## Author 
-```
-Design and code is completely written by Laurent Begey and development team. 
-```
+## Built With
 
-## License
+- HTML
+- Tailwind CSS (CDN)
+- Alpine.js (CDN)
+- Google Fonts (PT Sans, DM Sans)
 
- - Design and Code is Copyright &copy; <a href="https://lbegey78.gumroad.com/" target="_blank">Laurent Begey</a>
- - Licensed cover under [MIT]
- - Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+## Hosting
+
+Hosted with GitHub Pages from the `main` branch, root folder. Any push to `main` redeploys the site.
